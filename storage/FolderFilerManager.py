@@ -9,10 +9,9 @@ class FolderFileManager(FileManager):
         self.path = conn_string
 
     def get_all_files_metadata(self):
-        metadata = [(file, os.stat(os.path.join(root, file)).st_mtime)
-                    for root, dirs, files in os.walk(self.path)
-                    for file in files]
-        return metadata
+        return [(os.path.join(root, file), os.stat(os.path.join(root, file)).st_mtime)
+                for root, dirs, files in os.walk(self.path)
+                for file in files]
 
     def setup(self):
         pass

@@ -8,3 +8,7 @@ class FileManager:
     @abstractmethod
     def get_all_files_metadata(self):
         pass
+
+    @abstractmethod
+    def setup(self):
+        pass
