@@ -6,9 +6,37 @@ class FileManager:
         self.conn_string = conn_string
 
     @abstractmethod
-    def get_all_files_metadata(self):
+    def setup(self):
         pass
 
     @abstractmethod
-    def setup(self):
+    def retrieve_file(self, filename, fd_dest):
+        pass
+
+    @abstractmethod
+    def save_file(self, filename, fd_source):
+        pass
+
+    @abstractmethod
+    def dive_into_dir(self, directory):
+        pass
+
+    @abstractmethod
+    def leave_dir(self, directory):
+        pass
+
+    @abstractmethod
+    def get_files_metadata(self):
+        pass
+
+    @abstractmethod
+    def get_dirs(self):
+        pass
+
+    @abstractmethod
+    def create_dir(self):
+        pass
+
+    @abstractmethod
+    def remove_dir(self):
         pass

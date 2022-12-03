@@ -33,7 +33,7 @@ class ZipFileManager(FileManager):
                         break
                     fd_dest.write(content)
 
-    def write_file(self, filename, fd_source):
+    def save_file(self, filename, fd_source):
         with zipfile.ZipFile(self.path, mode='w') as zip:
             with zip.open(filename, mode='w') as fd:
                 while True:

@@ -24,7 +24,7 @@ class FolderFileManager(FileManager):
 
     def get_all_dirs(self):
         full_root_path = os.path.join(self.path, *self.current_dirs)
-        return  [maybe_dir for maybe_dir in os.listdir(full_root_path)
+        return [maybe_dir for maybe_dir in os.listdir(full_root_path)
                 if os.path.isdir(os.path.join(full_root_path, maybe_dir))]
 
     def dive_into_dir(self, child_dir: str):

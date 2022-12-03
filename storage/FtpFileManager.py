@@ -52,18 +52,17 @@ class FtpFileManager(FileManager):
     def dive_into_dir(self, child_dir: str):
         self.ftp.cwd(child_dir)
 
-    def leave_current_dir(self):
+    def leave_dir(self):
         self.ftp.cwd("..")
 
     def retrieve_file(self, file: str, fd):
         self.ftp.retrbinary(f"RETR {file}", fd.write)
 
     def save_file(self, file, fd):
-        self.ftp.storbinary(f'STOR {full_}', fd)
+        self.ftp.storbinary(f'STOR {file}', fd)
 
     def create_dir(self, directory):
-        full_dir_path = '/'.join(['.', *self.current_dirs, directory])
-        self.ftp.mkd(full_dir_path)
+        self.ftp.mkd(directory)
 
     def get_all_files_metadata(self):
         self.metadata = dict()
