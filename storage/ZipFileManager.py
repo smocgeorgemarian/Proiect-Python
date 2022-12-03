@@ -4,6 +4,8 @@ from datetime import datetime
 
 from storage.FileManager import FileManager
 
+BUFFER_SIZE = 8096
+
 
 class ZipFileManager(FileManager):
     def __init__(self, conn_string: str):
@@ -14,12 +16,6 @@ class ZipFileManager(FileManager):
     def setup(self):
         self.zip = zipfile.ZipFile(self.path)
 
-    def write_to_file_buffered(self, filename):
-        with zipfile.ZipFile(self.path, mode='w') as zip:
-            with zip.open(filename, mode='w') as fd:
-                fd.write(b"testing")
-
-
     @staticmethod
     def to_mili_from_epoch(date_time):
         return (datetime(date_time[0], month=date_time[1], day=date_time[2], hour=date_time[3], minute=date_time[4],
@@ -27,6 +23,25 @@ class ZipFileManager(FileManager):
 
     def get_all_files_metadata(self):
         return [(file_meta.filename, self.to_mili_from_epoch(file_meta.date_time)) for file_meta in self.zip.infolist()]
+
+    def retrieve_file(self, filename, fd_dest):
+        with zipfile.ZipFile(self.path, mode='r') as zip:
+            with zip.open(filename, mode='r') as fd:
+                while True:
+                    content = fd.read(BUFFER_SIZE)
+                    if content == '':
+                        break
+                    fd_dest.write(content)
+
+    def write_file(self, filename, fd_source):
+        with zipfile.ZipFile(self.path, mode='w') as zip:
+            with zip.open(filename, mode='w') as fd:
+                while True:
+                    content = fd_source.read(BUFFER_SIZE)
+                    if content == '':
+                        break
+                    fd.write(content)
+
 
 
 if __name__ == "__main__":
