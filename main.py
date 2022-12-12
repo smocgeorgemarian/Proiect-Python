@@ -1,16 +1,30 @@
-# This is a sample Python script.
+import os.path
+import zipfile
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from algorithm.init_algorithm import InitAlgorithm
+from storage.FtpFileManager import FtpFileManager
+from storage.ZipFileManager import ZipFileManager
+
+TEST_FILE = "file.zip"
+
+ZIP_CONN_STRING = "H:\\Anul 3\\Proiect-Python\\file.zip"
+
+def main():
+    if os.path.exists(TEST_FILE):
+        os.remove(TEST_FILE)
+
+    zipfile.ZipFile(TEST_FILE, 'w')
+    first_manager = ZipFileManager(conn_string=ZIP_CONN_STRING)
+    second_manager = FtpFileManager(conn_string="ftp:George Smoc:pass@localhost")
+    algorithm = InitAlgorithm(first_manager=first_manager,
+                              second_manager=second_manager)
+    algorithm.run()
+    # algorithm.keep_syncronized()
+
+if __name__ == "__main__":
+    main()
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    main()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/

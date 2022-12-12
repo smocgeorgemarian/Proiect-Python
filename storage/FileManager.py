@@ -22,7 +22,7 @@ class FileManager:
         pass
 
     @abstractmethod
-    def leave_dir(self, directory):
+    def leave_dir(self):
         pass
 
     @abstractmethod
@@ -34,9 +34,25 @@ class FileManager:
         pass
 
     @abstractmethod
-    def create_dir(self):
+    def create_dir(self, directory):
         pass
 
     @abstractmethod
-    def remove_dir(self):
+    def remove_dir(self, directory):
         pass
+
+    @abstractmethod
+    def open(self, filename, mode='r'):
+        pass
+
+    @abstractmethod
+    def remove_file(self, filename):
+        pass
+
+    @abstractmethod
+    def refresh(self):
+        pass
+
+    @staticmethod
+    def close(fd):
+        fd.close()

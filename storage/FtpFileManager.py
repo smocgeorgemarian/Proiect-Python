@@ -17,6 +17,7 @@ class FtpFileManager(FileManager):
         self.ftp = FTP(timeout=DEFAULT_TIMEOUT)
         self.metadata = dict()
         self.current_dirs = []
+        self.fd_dest = None
 
     def setup(self):
         self.ftp.connect(host=self.host, port=DEFAULT_PORT)
@@ -33,12 +34,12 @@ class FtpFileManager(FileManager):
             delta_hour += 12
         hour, minuntes = input_hour.split(':')
         minutes = minuntes[:-2]
-        date_time.extend([int(hour) + delta_hour, int(minutes)])
+        date_time.extend([(int(hour) + delta_hour) % 24, int(minutes)])
 
         return (datetime(date_time[0], month=date_time[1], day=date_time[2], hour=date_time[3], minute=date_time[4]) -
                 datetime(1970, month=1, day=1)).total_seconds()
 
-    def __get_all_files_metadata__(self):
+    def get_files_metadata(self):
         content = []
 
         self.ftp.dir('.', content.append)
@@ -46,8 +47,18 @@ class FtpFileManager(FileManager):
                 for element in content]
 
         files_data = [element for element in data if "DIR" not in element[2]]
-        self.metadata = {file_data[3]: self.to_mili_from_str(file_data[0], file_data[1])
-                         for file_data in files_data}
+        return {file_data[3]: self.to_mili_from_str(file_data[0], file_data[1])
+                for file_data in files_data}
+
+    def get_dirs(self):
+        content = []
+
+        self.ftp.dir('.', content.append)
+        data = [list(filter(lambda x: x != '', element.split(' ')))
+                for element in content]
+
+        files_data = [element for element in data if "DIR" in element[2]]
+        return [file_data[3] for file_data in files_data]
 
     def dive_into_dir(self, child_dir: str):
         self.ftp.cwd(child_dir)
@@ -55,17 +66,24 @@ class FtpFileManager(FileManager):
     def leave_dir(self):
         self.ftp.cwd("..")
 
-    def retrieve_file(self, file: str, fd):
-        self.ftp.retrbinary(f"RETR {file}", fd.write)
+    # def write_bytes_in_str_form(self, content):
+    #     self.fd_dest.write(str(content))
 
-    def save_file(self, file, fd):
-        self.ftp.storbinary(f'STOR {file}', fd)
+    def retrieve_file(self, filename: str, fd_dest):
+        self.fd_dest = fd_dest
+        self.ftp.retrbinary(f"RETR {filename}", fd_dest.write)
+
+    def save_file(self, filename, fd_source):
+        self.ftp.storbinary(f'STOR {filename}', fd_source)
 
     def create_dir(self, directory):
         self.ftp.mkd(directory)
 
-    def get_all_files_metadata(self):
-        self.metadata = dict()
-        self.__get_all_files_metadata__()
-        self.ftp.close()
-        return self.metadata
+    def remove_dir(self, directory):
+        self.ftp.rmd(directory)
+
+    def open(self, filename, mode='r'):
+        return None
+
+    def refresh(self):
+        pass
