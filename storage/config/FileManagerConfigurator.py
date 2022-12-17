@@ -1,13 +1,12 @@
-from ArgsValidator import StorageType
-from storage.FileManager import FileManager
-from storage.FolderFilerManager import FolderFileManager
-from storage.FtpFileManager import FtpFileManager
-from storage.ZipFileManager import ZipFileManager
+from storage.implementations.FolderFilerManager import FolderFileManager
+from storage.implementations.FtpFileManager import FtpFileManager
+from storage.implementations.ZipFileManager import ZipFileManager
+from validations.ArgsValidator import StorageType
 
 
 class FileManagerConfigurator:
     @staticmethod
-    def get_managers(conn_strings: list[str], storage_types: list[StorageType]) -> tuple[FileManager]:
+    def get_managers(conn_strings: list[str], storage_types: list[StorageType]) -> tuple:
         file_manager_list = []
         for index, storage_type in enumerate(storage_types):
             if storage_type == StorageType.FOLDER:

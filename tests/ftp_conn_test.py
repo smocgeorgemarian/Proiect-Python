@@ -1,6 +1,6 @@
 import unittest
 
-from storage.FtpFileManager import FtpFileManager
+from storage.implementations.FtpFileManager import FtpFileManager
 
 
 class MyTestCase(unittest.TestCase):

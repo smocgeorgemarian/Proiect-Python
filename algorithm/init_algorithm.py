@@ -1,7 +1,8 @@
+import logging
 import os.path
 
-from storage.FileManager import FileManager
-from storage.FtpFileManager import FtpFileManager
+from storage.interfaces.FileManager import FileManager
+from storage.implementations.FtpFileManager import FtpFileManager
 
 SECOND = 2
 
@@ -11,12 +12,14 @@ ACTUAL = "actual"
 
 FIRST = 1
 
+logger = logging.getLogger('Sync algorithm')
+
 
 class InitAlgorithm:
     def __init__(self, first_manager: FileManager, second_manager: FileManager):
         self.first_manager, self.second_manager = first_manager, second_manager
         self.tmp_file = 'tmp.file'
-
+        self.is_first_level = True
         self.snapshots = {
             FIRST: {
                 ACTUAL: dict(),
@@ -45,16 +48,16 @@ class InitAlgorithm:
         elif isinstance(first_manager, FtpFileManager):
             fd = second_manager.open(filename=file, mode='w')
             first_manager.retrieve_file(filename=file, fd_dest=fd)
-            fd.close()
+            second_manager.close(fd=fd)
         else:
             fd = first_manager.open(filename=file, mode='r')
             second_manager.save_file(filename=file, fd_source=fd)
-            fd.close()
+            first_manager.close(fd=fd)
 
     def syncronize_locations(self, first_meta, first_manager,
                              second_meta, second_manager):
         for file in first_meta:
-            if file in second_meta:
+            if file in second_meta and first_meta[file] < second_meta[file]:
                 continue
             self.copy_file(file=file, first_manager=first_manager, second_manager=second_manager)
 
@@ -68,6 +71,12 @@ class InitAlgorithm:
                 self.level_snapshots[man_index][full_path] = modified_time
 
     def __run__(self):
+        if len(self.dir_list) == 0:
+            logging_dir = "base dir"
+        else:
+            logging_dir = os.path.join(*self.dir_list)
+        logger.info("Running script on dir: {}".format(logging_dir))
+
         first_meta = self.first_manager.get_files_metadata()
         second_meta = self.second_manager.get_files_metadata()
 
@@ -82,8 +91,8 @@ class InitAlgorithm:
         second_dirs = set(self.second_manager.get_dirs())
 
         all_dirs = set(first_dirs) | set(second_dirs)
-        first_to_be_added = second_dirs - first_dirs
-        second_to_be_added = first_dirs - second_dirs
+        first_to_be_added = all_dirs - first_dirs
+        second_to_be_added = all_dirs - second_dirs
         for directory in first_to_be_added:
             self.first_manager.create_dir(directory)
         for directory in second_to_be_added:
@@ -93,6 +102,7 @@ class InitAlgorithm:
             self.first_manager.dive_into_dir(directory)
             self.second_manager.dive_into_dir(directory)
             self.dir_list.append(directory)
+            print(self.dir_list)
             self.__run__()
             self.dir_list.pop()
             self.first_manager.leave_dir()
@@ -100,7 +110,9 @@ class InitAlgorithm:
 
     def run(self):
         self.first_manager.setup()
+        logger.info("Setup for first manager succeeded")
         self.second_manager.setup()
+        logger.info("Setup for second manager succeeded")
         self.__run__()
         for man_index in [FIRST, SECOND]:
             self.snapshots[man_index][BEFORE] = dict(self.snapshots[man_index][ACTUAL])
@@ -164,6 +176,7 @@ class InitAlgorithm:
             self.second_manager.leave_dir()
 
     def keep_syncronized(self):
-        self.__keep_syncronized__()
-        self.first_manager.refresh()
-        self.second_manager.refresh()
+        while True:
+            self.__keep_syncronized__()
+            self.first_manager.refresh()
+            self.second_manager.refresh()

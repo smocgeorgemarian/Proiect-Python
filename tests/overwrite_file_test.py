@@ -1,9 +1,9 @@
 import os.path
 import unittest
 
-from storage.FolderFilerManager import FolderFileManager
-from storage.FtpFileManager import FtpFileManager
-from storage.ZipFileManager import ZipFileManager
+from storage.implementations.FolderFilerManager import FolderFileManager
+from storage.implementations.FtpFileManager import FtpFileManager
+from storage.implementations.ZipFileManager import ZipFileManager
 
 
 class MyTestCase(unittest.TestCase):

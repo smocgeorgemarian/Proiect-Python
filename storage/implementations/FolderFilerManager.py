@@ -1,12 +1,16 @@
 import os
 import shutil
+from typing import BinaryIO
 
-from storage.FileManager import FileManager
+from storage.interfaces.FileManager import FileManager
 
 BUFFER_SIZE = 8096
 
 
 class FolderFileManager(FileManager):
+    def close(self, fd: BinaryIO) -> None:
+        pass
+
     def __init__(self, conn_string: str):
         super().__init__(conn_string)
         self.path = conn_string
