@@ -6,6 +6,8 @@ from typing import Literal, BinaryIO, IO
 
 from storage.interfaces.FileManager import FileManager
 
+TMP_SUFFIX = ".tmp"
+
 SEPARATOR = "/"
 
 BUFFER_SIZE = 8096
@@ -37,16 +39,19 @@ class ZipFileManager(FileManager):
         return (datetime(date_time[0], month=date_time[1], day=date_time[2], hour=date_time[3], minute=date_time[4],
                          second=date_time[5]) - datetime(1970, month=1, day=1)).total_seconds()
 
+    def get_current_dir(self) -> str:
+        if len(self.current_dirs) > 0:
+            current_dir = SEPARATOR.join(self.current_dirs)
+        else:
+            current_dir = ''
+        return current_dir
+
     def is_file_in_current_dir(self, maybe_file: str) -> bool:
         if maybe_file.endswith(SEPARATOR):
             return False
-
-        if len(self.current_dirs) > 0:
-            current_dir_full_path = os.path.join(*self.current_dirs)
-        else:
-            current_dir_full_path = ''
+        current_dir = self.get_current_dir()
         maybe_file_parent_dir = os.path.dirname(maybe_file)
-        return current_dir_full_path == maybe_file_parent_dir
+        return current_dir == maybe_file_parent_dir
 
     def get_files_metadata(self) -> dict:
         with zipfile.ZipFile(self.path) as tmp_zip:
@@ -121,27 +126,34 @@ class ZipFileManager(FileManager):
         self.black_list.append(full_path_file)
 
     def refresh(self) -> None:
-        tmp_zip = zipfile.ZipFile(self.path + "tmp", mode='w')
-        for file_meta in self.zip.infolist():
-            if file_meta.filename in self.black_list:
-                continue
+        tmp_file_path = self.path + TMP_SUFFIX
 
-            if file_meta.filename.endswith(SEPARATOR):
-                continue
+        with zipfile.ZipFile(self.path, mode='r') as zip_fd:
+            for file_meta in zip_fd.infolist():
+                if file_meta.filename in self.black_list:
+                    continue
 
-            with zipfile.ZipFile(self.path, mode='r') as zip_fd:
+                if file_meta.filename.endswith(SEPARATOR):
+                    continue
+
                 with zip_fd.open(name=file_meta.filename, mode='r') as fd:
-
-                    with zipfile.ZipFile(self.path + "tmp", mode='a') as tmp_zip_fd:
+                    with zipfile.ZipFile(tmp_file_path, mode='a') as tmp_zip_fd:
                         with tmp_zip_fd.open(name=file_meta.filename, mode='w') as tmp_fd:
                             while True:
                                 content = fd.read(BUFFER_SIZE)
                                 if content == b'':
                                     break
                                 tmp_fd.write(content)
+        status = os.stat(self.path)
 
+        os.remove(self.path)
+        os.rename(src=tmp_file_path, dst=self.path)
+        os.chmod(self.path, status.st_mode)
         self.black_list = []
 
     @staticmethod
     def get_simple_name(filename: str) -> str:
         return PurePath(filename).name
+
+    def __str__(self):
+        return "Zip file manager"

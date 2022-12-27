@@ -13,6 +13,12 @@ class MyTestCase(unittest.TestCase):
         manager = FtpFileManager(conn_string="ftp:admin:pass@localhost")
         self.assertRaises(Exception, manager.setup)
 
+    def test_update_modification_time(self):
+        manager = FtpFileManager(conn_string="ftp:George Smoc:pass@localhost")
+        manager.setup()
+        data_before = manager.get_files_metadata()["Node.java"]
+        data_after = manager.get_files_metadata()["Node.java"]
+        a = 1
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 from ftplib import FTP
 from typing import BinaryIO
@@ -11,7 +12,7 @@ DEFAULT_TIMEOUT = 30
 
 class FtpFileManager(FileManager):
     def remove_file(self, filename: str) -> None:
-        pass
+        self.ftp.delete(filename)
 
     def close(self, fd: BinaryIO) -> None:
         pass
@@ -43,7 +44,7 @@ class FtpFileManager(FileManager):
         minutes = minutes[:-2]
         date_time.extend([(int(hour) + delta_hour) % 24, int(minutes)])
 
-        return (datetime(date_time[0], month=date_time[1], day=date_time[2], hour=date_time[3], minute=date_time[4]) -
+        return (datetime(date_time[0], month=date_time[2], day=date_time[1], hour=date_time[3], minute=date_time[4]) -
                 datetime(1970, month=1, day=1)).total_seconds()
 
     def get_files_metadata(self):
@@ -61,7 +62,7 @@ class FtpFileManager(FileManager):
         content = []
 
         self.ftp.dir('.', content.append)
-        data = [list(filter(lambda x: x != '', element.split(' ')))
+        data = [list(filter(lambda x: x != '', element.split('  ')))
                 for element in content]
 
         files_data = [element for element in data if "DIR" in element[2]]
@@ -94,3 +95,6 @@ class FtpFileManager(FileManager):
 
     def refresh(self):
         pass
+
+    def __str__(self):
+        return "Ftp file manager"

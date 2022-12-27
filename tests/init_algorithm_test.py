@@ -1,6 +1,6 @@
 import unittest
 
-from algorithm.init_algorithm import InitAlgorithm
+from algorithm.Algorithm import InitAlgorithm
 from storage.implementations.FolderFilerManager import FolderFileManager
 from storage.implementations.FtpFileManager import FtpFileManager
 from storage.implementations.ZipFileManager import ZipFileManager

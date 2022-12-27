@@ -9,7 +9,7 @@ BUFFER_SIZE = 8096
 
 class FolderFileManager(FileManager):
     def close(self, fd: BinaryIO) -> None:
-        pass
+        fd.close()
 
     def __init__(self, conn_string: str):
         super().__init__(conn_string)
@@ -74,3 +74,6 @@ class FolderFileManager(FileManager):
 
     def refresh(self):
         pass
+
+    def __str__(self):
+        return "Folder file manager"
