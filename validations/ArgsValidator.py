@@ -19,14 +19,12 @@ class ArgsValidator:
 
     @staticmethod
     def is_valid_ftp(conn_string: str) -> bool:
-        return re.match(r"ftp:(?#my_user)\w+:(?#my_pass)\w+:(?#folder)\w*",
-                        conn_string) is not None
+        return re.match(r"ftp:(?#my_user).+:(?#my_pass).+@(?#URL)(/(?#folder)\w*)?", conn_string) is not None
 
     @staticmethod
     def is_valid_zip(path: str) -> bool:
         local_path = path.split('zip:')[1]
-        if not zipfile.is_zipfile(local_path):
-            return False
+        return zipfile.is_zipfile(local_path)
 
     @staticmethod
     def is_valid_folder(path: str) -> bool:

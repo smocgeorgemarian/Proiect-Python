@@ -116,14 +116,17 @@ class InitAlgorithm:
             current_dir = os.path.join(*self.dir_list)
         return current_dir
 
-    def refresh_created_files(self, meta: dict, manager: FileManager, other_manager: FileManager,
+    def refresh_created_files(self, manager: FileManager, other_manager: FileManager,
                               snapshot: dict, other_snapshot: dict):
         current_dir = self.get_current_dir()
-        before = dict(snapshot[current_dir])
+        meta = manager.get_files_metadata()
+        logging.info(f"[Create] Current meta from dir {current_dir}: {meta}")
+        snapshot_copy = dict(snapshot[current_dir])
+        logging.info(f"[Create] Current snapshot from dir {current_dir}: {snapshot_copy}")
         for element in meta:
-            if element in before:
+            if element in snapshot_copy:
                 continue
-            logging.info(f"Creating {element} from dir {current_dir} to manager {other_manager}")
+            logging.info(f"[Create][File] {element} from dir {current_dir} to manager {other_manager}")
             self.copy_file(file=element,
                            first_manager=manager,
                            second_manager=other_manager)
@@ -131,43 +134,45 @@ class InitAlgorithm:
             snapshot[current_dir][element] = meta[element]
             other_snapshot[current_dir][element] = tmp_meta[element]
 
-    def refresh_updated_files(self, meta: dict,
-                              other_meta: dict,
+    def refresh_updated_files(self,
                               snapshot: dict,
                               other_snapshot: dict,
                               manager: FileManager, other_manager: FileManager):
         current_dir = self.get_current_dir()
-        before = dict(snapshot[current_dir])
+        snapshot_copy = dict(snapshot[current_dir])
+        meta = manager.get_files_metadata()
+        logging.info(f"[Update] Current meta from dir {current_dir}: {meta}")
+        logging.info(f"[Update] Current snapshot copy from dir {current_dir}: {snapshot_copy}")
         for element in meta:
-            if element not in before:
+            if element not in snapshot_copy:
                 pass
 
-            if meta[element] != before[element]:
-                logging.info(f"File {element} from {current_dir} from manager {other_manager} updated")
+            if meta[element] != snapshot_copy[element]:
+                logging.info(f"[Update][File] {element} from {current_dir} from manager {other_manager} updated")
                 self.copy_file(file=element, first_manager=manager, second_manager=other_manager)
                 tmp_meta = other_manager.get_files_metadata()
                 other_snapshot[current_dir][element] = tmp_meta[element]
                 snapshot[current_dir][element] = meta[element]
-                other_meta = meta
 
     def refresh_deleted_files(self, snapshot: dict, other_snapshot: dict,
                               manager: FileManager, other_manager: FileManager, delete_index: int):
         current_dir = self.get_current_dir()
         meta = manager.get_files_metadata()
-        snapshot_copy = dict(snapshot)
+        logging.info(f"[Delete] Current meta from dir {current_dir}: {meta}")
+        snapshot_copy = dict(snapshot[current_dir])
+        logging.info(f"[Delete] Current snapshot copy from dir {current_dir}: {snapshot_copy}")
         for element in snapshot_copy:
             if element in meta:
                 continue
 
             self.is_changed[delete_index] = True
-            logging.info(f"Deleting file {element} from {other_manager}")
+            logging.info(f"[Delete][File] {element} from {other_manager}")
             other_manager.remove_file(filename=element)
             del snapshot[current_dir][element]
             del other_snapshot[current_dir][element]
-            del other_snapshot[element]
+        other_manager.refresh()
 
     def refresh_files(self):
-        current_dir = self.get_current_dir()
         self.refresh_deleted_files(snapshot=self.first_snapshot, other_snapshot=self.second_snapshot,
                                    manager=self.first_manager, other_manager=self.second_manager, delete_index=SECOND)
 
@@ -191,8 +196,8 @@ class InitAlgorithm:
         second_dirs = set(self.second_manager.get_dirs())
 
         intersection_dirs = first_dirs & second_dirs
-        # delta_first = first_dirs - intersection_dirs
-        # delta_second = second_dirs - intersection_dirs
+        delta_first = first_dirs - intersection_dirs
+        delta_second = second_dirs - intersection_dirs
         #
         # for directory in delta_first:
         #     self.first_manager.remove_dir(directory=directory)
@@ -223,8 +228,9 @@ class InitAlgorithm:
                 SECOND: False
             }
             self.__keep_syncronized__()
-            logging.info(f"Is changed status {self.is_changed}")
+            # logging.info(f"Is changed status {self.is_changed}")
             if self.is_changed[FIRST]:
                 self.first_manager.refresh()
             if self.is_changed[SECOND]:
                 self.second_manager.refresh()
+            time.sleep(1)

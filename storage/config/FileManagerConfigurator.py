@@ -6,7 +6,7 @@ from validations.ArgsValidator import StorageType
 
 class FileManagerConfigurator:
     @staticmethod
-    def get_managers(conn_strings: list[str], storage_types: list[StorageType]) -> tuple:
+    def get_managers(conn_strings: list[str], storage_types: tuple[StorageType]) -> tuple:
         file_manager_list = []
         for index, storage_type in enumerate(storage_types):
             if storage_type == StorageType.FOLDER:

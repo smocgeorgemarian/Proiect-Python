@@ -1,4 +1,3 @@
-import re
 from datetime import datetime
 from ftplib import FTP
 from typing import BinaryIO
@@ -21,7 +20,13 @@ class FtpFileManager(FileManager):
         super().__init__(conn_string)
         self.conn_string = conn_string
         prefix, self.user, passwd_and_host = conn_string.split(':')
-        self.passwd, self.host = passwd_and_host.split('@')
+        self.passwd, host_and_dir = passwd_and_host.split('@')
+        if "/" not in host_and_dir:
+            self.host = host_and_dir
+            self.start_dir = '.'
+        else:
+            self.host, self.start_dir = host_and_dir.split("/", maxsplit=1)
+
         self.ftp = FTP(timeout=DEFAULT_TIMEOUT)
         self.metadata = dict()
         self.current_dirs = []
@@ -30,6 +35,7 @@ class FtpFileManager(FileManager):
     def setup(self):
         self.ftp.connect(host=self.host, port=DEFAULT_PORT)
         self.ftp.login(user=self.user, passwd=self.passwd)
+        self.ftp.cwd(dirname=self.start_dir)
 
     @staticmethod
     def to_millis_from_str(input_date: str, input_hour: str):
@@ -47,13 +53,24 @@ class FtpFileManager(FileManager):
         return (datetime(date_time[0], month=date_time[2], day=date_time[1], hour=date_time[3], minute=date_time[4]) -
                 datetime(1970, month=1, day=1)).total_seconds()
 
+    @staticmethod
+    def process_spaced_metadata(element: str) -> list[str]:
+        const_data = list(filter(lambda x: x, element.split(" ")))[:3]
+        start_index = element.find(f" {const_data[2]} ")
+        last_index = start_index + len(const_data[2]) + 2
+        while element[last_index] == ' ':
+            last_index += 1
+
+        last_data = element[last_index:]
+        const_data.append(last_data)
+        return const_data
+
     def get_files_metadata(self):
         content = []
 
         self.ftp.dir('.', content.append)
-        data = [list(filter(lambda x: x != '', element.split(' ')))
+        data = [self.process_spaced_metadata(element)
                 for element in content]
-
         files_data = [element for element in data if "DIR" not in element[2]]
         return {file_data[3]: self.to_millis_from_str(file_data[0], file_data[1])
                 for file_data in files_data}
@@ -62,7 +79,7 @@ class FtpFileManager(FileManager):
         content = []
 
         self.ftp.dir('.', content.append)
-        data = [list(filter(lambda x: x != '', element.split('  ')))
+        data = [self.process_spaced_metadata(element)
                 for element in content]
 
         files_data = [element for element in data if "DIR" in element[2]]

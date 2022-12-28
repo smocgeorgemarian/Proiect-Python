@@ -1,13 +1,16 @@
 import logging
 import os.path
+import sys
 import zipfile
 
 from algorithm.Algorithm import InitAlgorithm
+from storage.config.FileManagerConfigurator import FileManagerConfigurator
 from storage.implementations.FolderFilerManager import FolderFileManager
 from storage.implementations.FtpFileManager import FtpFileManager
-from storage.implementations.ZipFileManager import ZipFileManager
+from validations.ArgsValidator import ArgsValidator
 
 TEST_FILE = os.path.join(".", "resources", "file.zip")
+FOLDER_PATH = "H:\\ftp"
 
 
 def mock_setup():
@@ -15,29 +18,36 @@ def mock_setup():
         os.remove(TEST_FILE)
     tmp_zip = zipfile.ZipFile(TEST_FILE, 'w')
     tmp_zip.close()
-    pass
 
+    if not os.path.exists(os.path.join(FOLDER_PATH, "to_be_deleted")):
+        os.mkdir(os.path.join(FOLDER_PATH, "to_be_deleted"))
 
-def main1():
-    mock_setup()
-    first_manager = FtpFileManager(conn_string="ftp:George Smoc:pass@localhost")
-    second_manager = FolderFileManager(conn_string="H:\\Anul 3\\local")
-    algorithm = InitAlgorithm(first_manager=first_manager,
-                              second_manager=second_manager)
-    algorithm.run()
-    algorithm.keep_syncronized()
+    for mock_files in ["a", "b.txt", "c"]:
+        with open(os.path.join(FOLDER_PATH, mock_files), "w") as fd:
+            fd.write(mock_files)
+        with open(os.path.join(FOLDER_PATH, "tests", mock_files), "w") as fd:
+            fd.write(mock_files)
+        with open(os.path.join(FOLDER_PATH, "to_be_deleted", mock_files), "w") as fd:
+            fd.write(mock_files)
 
 
 def main():
     logging.basicConfig(encoding='utf-8', level=logging.INFO)
-    mock_setup()
-    first_manager = FolderFileManager(conn_string="H:\\Anul 3\\local")
-    second_manager = ZipFileManager(conn_string=TEST_FILE)
-    algorithm = InitAlgorithm(first_manager=first_manager,
-                              second_manager=second_manager)
+    argv = sys.argv[1:]
+
+    validator = ArgsValidator(argv=argv)
+    storage_types = validator.validate()
+    managers = FileManagerConfigurator.get_managers(argv, storage_types)
+    # content = []
+    #
+    # managers[0].setup()
+    # managers[0].ftp.dir('.', content.append)
+    # print(content)
+    algorithm = InitAlgorithm(*managers)
     algorithm.run()
     algorithm.keep_syncronized()
 
 
 if __name__ == "__main__":
     main()
+

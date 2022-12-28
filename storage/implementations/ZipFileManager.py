@@ -1,3 +1,4 @@
+import logging
 import os
 import zipfile
 from datetime import datetime
@@ -21,7 +22,7 @@ class ZipFileManager(FileManager):
     def __init__(self, conn_string: str) -> None:
         super().__init__(conn_string)
         self.last_man_opened_zip = None
-        self.path = conn_string
+        self.path = conn_string.split("zip:")[1]
         self.zip = None
         self.current_dirs = []
         self.black_list = []
@@ -122,14 +123,17 @@ class ZipFileManager(FileManager):
         self.black_list.append(full_path_dir)
 
     def remove_file(self, filename: str) -> None:
-        full_path_file = os.path.join(*self.current_dirs, filename)
+        full_path_file = SEPARATOR.join([*self.current_dirs, filename])
         self.black_list.append(full_path_file)
 
     def refresh(self) -> None:
+        if not self.black_list:
+            return
+        logging.info(f"Current blacklist {self.black_list}")
         tmp_file_path = self.path + TMP_SUFFIX
-
         with zipfile.ZipFile(self.path, mode='r') as zip_fd:
             for file_meta in zip_fd.infolist():
+                print(file_meta.filename)
                 if file_meta.filename in self.black_list:
                     continue
 
