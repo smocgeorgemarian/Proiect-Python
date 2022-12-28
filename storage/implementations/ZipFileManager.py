@@ -57,7 +57,7 @@ class ZipFileManager(FileManager):
     def get_files_metadata(self) -> dict:
         with zipfile.ZipFile(self.path) as tmp_zip:
             return {self.get_simple_name(file_meta.filename):
-                    self.to_millis_from_epoch(file_meta.date_time)
+                        self.to_millis_from_epoch(file_meta.date_time)
                     for file_meta in tmp_zip.infolist()
                     if self.is_file_in_current_dir(file_meta.filename)}
 
@@ -101,7 +101,7 @@ class ZipFileManager(FileManager):
             return False
 
         if len(self.current_dirs) > 0:
-            current_dir_full_path = os.path.join(*self.current_dirs)
+            current_dir_full_path = SEPARATOR.join(self.current_dirs)
         else:
             current_dir_full_path = ''
 
@@ -109,11 +109,22 @@ class ZipFileManager(FileManager):
         return current_dir_full_path == parent_dir
 
     def get_dirs(self) -> list[str]:
+        dirs = set()
         with zipfile.ZipFile(self.path) as tmp_zip:
-            dirs = list(filter(lambda x: self.is_dir_in_current_dir(x), set([os.path.dirname(x)
-                                                                             for x in tmp_zip.namelist()])))
-            dirs = list(map(lambda x: os.path.basename(x), dirs))
-        return dirs
+            non_empty_dirs = set(os.path.dirname(element)
+                                 for element in tmp_zip.namelist())
+
+            for non_empty_dir in non_empty_dirs:
+                rec_dirs = {non_empty_dir}
+                parent_dir = os.path.dirname(non_empty_dir)
+                while parent_dir != non_empty_dir and parent_dir != '':
+                    rec_dirs.add(parent_dir)
+                    non_empty_dir = parent_dir
+                    parent_dir = os.path.dirname(non_empty_dir)
+                dirs |= rec_dirs
+        values = list(map(lambda x: os.path.basename(x),
+                          list(filter(lambda x: self.is_dir_in_current_dir(x), dirs))))
+        return values
 
     def create_dir(self, directory: str) -> None:
         pass
@@ -133,7 +144,11 @@ class ZipFileManager(FileManager):
         tmp_file_path = self.path + TMP_SUFFIX
         with zipfile.ZipFile(self.path, mode='r') as zip_fd:
             for file_meta in zip_fd.infolist():
-                print(file_meta.filename)
+                parent_dir = os.path.basename(file_meta.filename)
+
+                if parent_dir in self.black_list:
+                    continue
+
                 if file_meta.filename in self.black_list:
                     continue
 

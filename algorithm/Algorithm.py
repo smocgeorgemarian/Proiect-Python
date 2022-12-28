@@ -25,6 +25,8 @@ class InitAlgorithm:
             FIRST: False,
             SECOND: False
         }
+        self.first_dir_snapshot = defaultdict(lambda: dict())
+        self.second_dir_snapshot = defaultdict(lambda: dict())
 
     def copy_file(self, file, first_manager, second_manager):
         if isinstance(first_manager, FtpFileManager) \
@@ -70,16 +72,21 @@ class InitAlgorithm:
             first_meta = tmp_meta
 
     def syncronize_dirs(self):
+        current_dir = self.get_current_dir()
         first_dirs = set(self.first_manager.get_dirs())
         second_dirs = set(self.second_manager.get_dirs())
 
-        all_dirs = set(first_dirs) | set(second_dirs)
+        all_dirs = first_dirs | second_dirs
         first_to_be_added = second_dirs - first_dirs
         second_to_be_added = first_dirs - second_dirs
         for directory in first_to_be_added:
             self.first_manager.create_dir(directory)
         for directory in second_to_be_added:
             self.second_manager.create_dir(directory)
+
+        for directory in all_dirs:
+            self.first_dir_snapshot[current_dir][directory] = None
+            self.second_dir_snapshot[current_dir][directory] = None
         return all_dirs
 
     def __run__(self):
@@ -191,22 +198,71 @@ class InitAlgorithm:
         self.refresh_updated_files(snapshot=self.second_snapshot, other_snapshot=self.first_snapshot,
                                    manager=self.second_manager, other_manager=self.first_manager)
 
+    def refresh_created_dirs(self, manager: FileManager, snapshot: dict,
+                             other_manager: FileManager, other_snapshot: dict):
+        current_dir = self.get_current_dir()
+        dirs = set(manager.get_dirs())
+        new_dirs = set()
+        for directory in dirs:
+            if directory in snapshot[current_dir]:
+                continue
+            new_dirs.add(directory)
+            other_manager.create_dir(directory)
+            other_snapshot[current_dir][directory] = None
+        return new_dirs
+
+    def clean_dir_data(self, to_be_cleaned: dict, element: str, is_inner_dict: bool = False) -> None:
+        current_dir = self.get_current_dir()
+        base_element = os.path.basename(element)
+        if is_inner_dict:
+            del to_be_cleaned[current_dir][base_element]
+
+        to_be_removed_keys = list(filter(lambda x: x.startswith(element),
+                                         to_be_cleaned.keys()))
+        for key in to_be_removed_keys:
+            del to_be_cleaned[key]
+
+    def refresh_deleted_dirs(self, manager: FileManager,
+                             other_manager: FileManager,
+                             snapshot: dict,
+                             other_snapshot: dict,
+                             files_snapshot: dict,
+                             other_files_snapshot: dict) -> None:
+        current_dir = self.get_current_dir()
+        dirs = set(manager.get_dirs())
+
+        snapshot_copy = dict(snapshot[current_dir])
+        for element in snapshot_copy:
+            if element in dirs:
+                continue
+            other_manager.remove_dir(element)
+            full_element = os.path.join(current_dir, element)
+            self.clean_dir_data(to_be_cleaned=snapshot, element=full_element, is_inner_dict=True)
+            self.clean_dir_data(to_be_cleaned=other_snapshot, element=full_element, is_inner_dict=True)
+            self.clean_dir_data(to_be_cleaned=files_snapshot, element=full_element)
+            self.clean_dir_data(to_be_cleaned=other_files_snapshot, element=full_element)
+        manager.refresh()
+        other_manager.refresh()
+
     def refresh_dirs(self):
         first_dirs = set(self.first_manager.get_dirs())
         second_dirs = set(self.second_manager.get_dirs())
 
-        intersection_dirs = first_dirs & second_dirs
-        delta_first = first_dirs - intersection_dirs
-        delta_second = second_dirs - intersection_dirs
-        #
-        # for directory in delta_first:
-        #     self.first_manager.remove_dir(directory=directory)
-        #     del self.first_snapshot[current_dir]
-        #
-        # for directory in delta_second:
-        #     self.second_manager.remove_dir(directory=directory)
-        #     del self.second_snapshot[current_dir]
-        return intersection_dirs
+        added_dirs = self.refresh_created_dirs(manager=self.first_manager, snapshot=self.first_dir_snapshot,
+                                               other_manager=self.second_manager,
+                                               other_snapshot=self.second_dir_snapshot)
+        added_dirs |= self.refresh_created_dirs(manager=self.second_manager, snapshot=self.second_dir_snapshot,
+                                                other_manager=self.first_manager,
+                                                other_snapshot=self.first_dir_snapshot)
+
+        self.refresh_deleted_dirs(manager=self.first_manager, other_manager=self.second_manager,
+                                  snapshot=self.first_dir_snapshot, other_snapshot=self.second_dir_snapshot,
+                                  files_snapshot=self.first_snapshot, other_files_snapshot=self.second_snapshot)
+        self.refresh_deleted_dirs(manager=self.second_manager, other_manager=self.first_manager,
+                                  snapshot=self.second_dir_snapshot, other_snapshot=self.first_dir_snapshot,
+                                  files_snapshot=self.second_snapshot, other_files_snapshot=self.first_snapshot)
+
+        return (first_dirs & second_dirs) | added_dirs
 
     def __keep_syncronized__(self):
         self.refresh_files()
@@ -227,10 +283,13 @@ class InitAlgorithm:
                 FIRST: False,
                 SECOND: False
             }
-            self.__keep_syncronized__()
+            try:
+                self.__keep_syncronized__()
+            except Exception as e:
+                print(e)
             # logging.info(f"Is changed status {self.is_changed}")
             if self.is_changed[FIRST]:
                 self.first_manager.refresh()
             if self.is_changed[SECOND]:
                 self.second_manager.refresh()
-            time.sleep(1)
+            time.sleep(5)

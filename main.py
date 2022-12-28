@@ -19,30 +19,27 @@ def mock_setup():
     tmp_zip = zipfile.ZipFile(TEST_FILE, 'w')
     tmp_zip.close()
 
-    if not os.path.exists(os.path.join(FOLDER_PATH, "to_be_deleted")):
-        os.mkdir(os.path.join(FOLDER_PATH, "to_be_deleted"))
-
-    for mock_files in ["a", "b.txt", "c"]:
-        with open(os.path.join(FOLDER_PATH, mock_files), "w") as fd:
-            fd.write(mock_files)
-        with open(os.path.join(FOLDER_PATH, "tests", mock_files), "w") as fd:
-            fd.write(mock_files)
-        with open(os.path.join(FOLDER_PATH, "to_be_deleted", mock_files), "w") as fd:
-            fd.write(mock_files)
+    # if not os.path.exists(os.path.join(FOLDER_PATH, "to_be_deleted")):
+    #     os.mkdir(os.path.join(FOLDER_PATH, "to_be_deleted"))
+    #
+    # for mock_files in ["a", "b.txt", "c"]:
+    #     with open(os.path.join(FOLDER_PATH, mock_files), "w") as fd:
+    #         fd.write(mock_files)
+    #     with open(os.path.join(FOLDER_PATH, "tests", mock_files), "w") as fd:
+    #         fd.write(mock_files)
+    #     with open(os.path.join(FOLDER_PATH, "to_be_deleted", mock_files), "w") as fd:
+    #         fd.write(mock_files)
 
 
 def main():
+    # mock_setup()
     logging.basicConfig(encoding='utf-8', level=logging.INFO)
     argv = sys.argv[1:]
 
     validator = ArgsValidator(argv=argv)
     storage_types = validator.validate()
     managers = FileManagerConfigurator.get_managers(argv, storage_types)
-    # content = []
-    #
-    # managers[0].setup()
-    # managers[0].ftp.dir('.', content.append)
-    # print(content)
+
     algorithm = InitAlgorithm(*managers)
     algorithm.run()
     algorithm.keep_syncronized()
