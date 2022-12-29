@@ -3,7 +3,7 @@ from datetime import datetime
 from ftplib import FTP
 from typing import BinaryIO
 
-from storage.interfaces.FileManager import FileManager
+from storage.interfaces.FileManager import FileManager, FILES, FOLDERS
 
 DEFAULT_PORT = 21
 
@@ -91,7 +91,10 @@ class FtpFileManager(FileManager):
 
     def get_files_metadata(self, index=0):
         if index == 0:
-            self.meta = dict()
+            self.meta = {
+                FOLDERS: dict(),
+                FILES: dict()
+            }
 
         content = []
         curr_dir = '.'
@@ -101,10 +104,11 @@ class FtpFileManager(FileManager):
         self.ftp.dir(curr_dir, content.append)
         data = [self.process_spaced_metadata(element) for element in content]
         files_data = [element for element in data if "DIR" not in element[2]]
-        self.meta.update({file_data[3]: self.to_millis_from_str(file_data[0], file_data[1])
-                          for file_data in files_data})
+        self.meta[FILES].update({file_data[3]: self.to_millis_from_str(file_data[0], file_data[1])
+                                 for file_data in files_data})
 
         dirs_data = [element for element in data if "DIR" in element[2]]
+        self.meta[FOLDERS].update({dir_data[3]: None for dir_data in dirs_data})
         for dir_data in dirs_data:
             self.curr_dirs.append(dir_data[3][-1])
             self.get_files_metadata(index + 1)

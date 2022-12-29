@@ -1,6 +1,8 @@
 from abc import abstractmethod
 from typing import BinaryIO
 
+FOLDERS = 0
+FILES = 1
 
 class FileManager:
     def __init__(self, conn_string: str) -> None:

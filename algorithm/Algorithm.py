@@ -4,7 +4,7 @@ from collections import defaultdict
 
 from storage.implementations.FtpFileManager import FtpFileManager
 from storage.implementations.ZipFileManager import ZipFileManager
-from storage.interfaces.FileManager import FileManager
+from storage.interfaces.FileManager import FileManager, FOLDERS, FILES
 
 BEFORE = "before"
 ACTUAL = "actual"
@@ -17,13 +17,17 @@ MAN_SIZE = 1
 class InitAlgorithm:
     def __init__(self, mans: list[FileManager], tmp_file: str = 'tmp.file'):
         self.mans = mans
-        self.snaps = [defaultdict(lambda: dict()), defaultdict(lambda: dict())]
-        # self.dir_snaps = [defaultdict(lambda: dict()), defaultdict(lambda: dict())]
-
+        self.snaps = [
+            {
+                FOLDERS: defaultdict(lambda: dict()),
+                FILES: defaultdict(lambda: dict())
+            },
+            {
+                FOLDERS: defaultdict(lambda: dict()),
+                FILES: defaultdict(lambda: dict())
+            }
+        ]
         self.tmp_file = tmp_file
-
-        self.dirs = list()
-        self.curr_dir = ""
 
     def copy_file(self, path_data: tuple, src: FileManager, dest: FileManager, dest_meta: dict) -> None:
         if isinstance(src, FtpFileManager) \
@@ -51,24 +55,32 @@ class InitAlgorithm:
     def initialise(self):
         metas = [man.get_files_metadata() for man in self.mans]
         self.snaps = [dict(meta) for meta in metas]
+
         # compute a common format
         for man_index, meta in enumerate(metas):
-            man = self.mans[man_index]
-            snap = self.snaps[man_index]
-
             other_man_index = MAN_SIZE - man_index
-            other_meta = metas[other_man_index]
-            other_man = self.mans[other_man_index]
-            other_snap = self.snaps[other_man_index]
-            for path_data in meta:
+            man, other_man = self.mans[man_index], self.mans[other_man_index]
+
+            dir_snap, files_snap = self.snaps[man_index][FOLDERS], self.snaps[man_index][FILES]
+            dir_meta, files_meta = meta[FOLDERS], meta[FILES]
+
+            other_dir_meta, other_files_meta = metas[other_man_index][FOLDERS], metas[other_man_index][FILES]
+            other_dir_snap, other_files_snap = self.snaps[other_man_index][FOLDERS], self.snaps[other_man_index][FILES]
+
+            for path_data in dir_meta:
+                if path_data not in other_dir_meta:
+                    other_man.create_dir(path_data=path_data)
+                    other_dir_snap[path_data] = None
+
+            for path_data in files_meta:
                 # if it is not newer we do not proceed
-                if path_data in other_meta and meta[path_data] <= other_meta[path_data]:
+                if path_data in other_files_meta and files_meta[path_data] <= other_files_meta[path_data]:
                     continue
                 other_man.mkdirs(path_data[:-1])
-                self.copy_file(path_data=path_data, src=man, dest=other_man, dest_meta=other_meta)
+                self.copy_file(path_data=path_data, src=man, dest=other_man, dest_meta=other_files_meta)
                 # update in memory
-                snap[path_data] = man.get_files_metadata()[path_data]
-                other_snap[path_data] = other_man.get_files_metadata()[path_data]
+                files_snap[path_data] = man.get_files_metadata()[FILES][path_data]
+                other_files_snap[path_data] = other_man.get_files_metadata()[FILES][path_data]
 
     def keep_deleted(self):
         metas = [man.get_files_metadata() for man in self.mans]
@@ -153,6 +165,6 @@ class InitAlgorithm:
             man.setup()
             logging.info(f"Setup succeded for {man}")
         self.initialise()
-        while True:
-            self.keep_sync()
-            time.sleep(1)
+        # while True:
+        #     self.keep_sync()
+        #     time.sleep(1)

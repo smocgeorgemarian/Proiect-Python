@@ -5,7 +5,7 @@ from datetime import datetime
 from pathlib import PurePath, Path
 from typing import Literal, BinaryIO, IO
 
-from storage.interfaces.FileManager import FileManager
+from storage.interfaces.FileManager import FileManager, FOLDERS, FILES
 
 TMP_SUFFIX = ".tmp"
 
@@ -61,11 +61,19 @@ class ZipFileManager(FileManager):
         return current_dir == maybe_file_parent_dir
 
     def get_files_metadata(self) -> dict:
-        data = {}
+        data = {
+            FOLDERS: dict(),
+            FILES: dict()
+        }
         with zipfile.ZipFile(self.path) as tmp_zip:
-            data = {self.get_path_data(file_meta.filename):
-                    self.to_millis_from_epoch(file_meta.date_time)
-                    for file_meta in tmp_zip.infolist()}
+            brute_infolist = tmp_zip.infolist()
+
+            for file_meta in brute_infolist:
+                path_data = self.get_path_data(file_meta.filename)
+                if file_meta.is_dir():
+                    data[FOLDERS][path_data] = None
+                else:
+                    data[FILES][path_data] = self.to_millis_from_epoch(file_meta.date_time)
         return data
 
     def retrieve_file(self, path_data: tuple, fd_dest: BinaryIO) -> None:
@@ -135,7 +143,7 @@ class ZipFileManager(FileManager):
         return values
 
     def create_dir(self, path_data: tuple) -> None:
-        full_dir_path = "".join(f"{path_data}{SEPARATOR}")
+        full_dir_path = SEPARATOR.join(path_data) + SEPARATOR
         zfi = zipfile.ZipInfo(full_dir_path)
         with zipfile.ZipFile(self.path, mode='a') as zip_fd:
             zip_fd.writestr(zfi, '')

@@ -5,8 +5,6 @@ import zipfile
 
 from algorithm.Algorithm import InitAlgorithm
 from storage.config.FileManagerConfigurator import FileManagerConfigurator
-from storage.implementations.FolderFilerManager import FolderFileManager
-from storage.implementations.FtpFileManager import FtpFileManager
 from validations.ArgsValidator import ArgsValidator
 
 TEST_FILE = os.path.join(".", "resources", "file.zip")
@@ -17,34 +15,27 @@ def mock_setup():
     if os.path.exists(TEST_FILE):
         os.remove(TEST_FILE)
     tmp_zip = zipfile.ZipFile(TEST_FILE, 'w')
+    info = zipfile.ZipInfo("tests/")
+    tmp_zip.writestr(info, '')
+
+    for content in ['a', 'b', 'c']:
+        with tmp_zip.open(content, 'w') as fd:
+            fd.write(str.encode(content))
     tmp_zip.close()
 
-    # if not os.path.exists(os.path.join(FOLDER_PATH, "to_be_deleted")):
-    #     os.mkdir(os.path.join(FOLDER_PATH, "to_be_deleted"))
-    #
-    # for mock_files in ["a", "b.txt", "c"]:
-    #     with open(os.path.join(FOLDER_PATH, mock_files), "w") as fd:
-    #         fd.write(mock_files)
-    #     with open(os.path.join(FOLDER_PATH, "tests", mock_files), "w") as fd:
-    #         fd.write(mock_files)
-    #     with open(os.path.join(FOLDER_PATH, "to_be_deleted", mock_files), "w") as fd:
-    #         fd.write(mock_files)
-
-
 def main():
-    # mock_setup()
+    mock_setup()
 
-    # logging.basicConfig(encoding='utf-8', level=logging.INFO)
-    # argv = sys.argv[1:]
-    #
-    # validator = ArgsValidator(argv=argv)
-    # storage_types = validator.validate()
-    # managers = FileManagerConfigurator.get_managers(argv, storage_types)
-    #
-    # algorithm = InitAlgorithm(managers)
-    # algorithm.run()
+    logging.basicConfig(encoding='utf-8', level=logging.INFO)
+    argv = sys.argv[1:]
+
+    validator = ArgsValidator(argv=argv)
+    storage_types = validator.validate()
+    managers = FileManagerConfigurator.get_managers(argv, storage_types)
+
+    algorithm = InitAlgorithm(managers)
+    algorithm.run()
 
 
 if __name__ == "__main__":
     main()
-
