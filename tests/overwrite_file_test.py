@@ -18,13 +18,13 @@ class MyTestCase(unittest.TestCase):
         manager = FtpFileManager(conn_string="ftp:George Smoc:pass@localhost")
         manager.setup()
         with open(os.path.join(".", "resources", "file.tmp"), mode='rb') as fd:
-            manager.save_file(filename="name1", fd_source=fd)
+            manager.save_file(path_data="name1", fd_source=fd)
 
     def test_overwrite_local(self):
         manager = FolderFileManager(conn_string="H:\\Anul 3\\local")
         manager.setup()
         with open(os.path.join(".", "resources", "file.tmp"), mode='rb') as fd:
-            manager.save_file(filename="name1", fd_source=fd)
+            manager.save_file(path_data="name1", fd_source=fd)
 
     def test_overwrite_ftp_to_local(self):
         first_manager = FtpFileManager(conn_string="ftp:George Smoc:pass@localhost")
@@ -34,7 +34,7 @@ class MyTestCase(unittest.TestCase):
         second_manager.setup()
 
         fd_dest = second_manager.open(filename="name1", mode="w")
-        first_manager.retrieve_file(filename="name1", fd_dest=fd_dest)
+        first_manager.retrieve_file(path_data="name1", fd_dest=fd_dest)
         second_manager.close(fd_dest)
 
 

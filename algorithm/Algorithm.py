@@ -1,295 +1,158 @@
 import logging
-import os.path
 import time
 from collections import defaultdict
 
 from storage.implementations.FtpFileManager import FtpFileManager
+from storage.implementations.ZipFileManager import ZipFileManager
 from storage.interfaces.FileManager import FileManager
 
 BEFORE = "before"
 ACTUAL = "actual"
 
-FIRST = 1
-SECOND = 2
+FIRST = 0
+SECOND = 1
+MAN_SIZE = 1
 
 
 class InitAlgorithm:
-    def __init__(self, first_manager: FileManager, second_manager: FileManager):
-        self.first_manager, self.second_manager = first_manager, second_manager
-        self.tmp_file = 'tmp.file'
-        self.is_first_level = True
-        self.dir_list = list()
-        self.first_snapshot = defaultdict(lambda: dict())
-        self.second_snapshot = defaultdict(lambda: dict())
-        self.is_changed = {
-            FIRST: False,
-            SECOND: False
-        }
-        self.first_dir_snapshot = defaultdict(lambda: dict())
-        self.second_dir_snapshot = defaultdict(lambda: dict())
+    def __init__(self, mans: list[FileManager], tmp_file: str = 'tmp.file'):
+        self.mans = mans
+        self.snaps = [defaultdict(lambda: dict()), defaultdict(lambda: dict())]
+        # self.dir_snaps = [defaultdict(lambda: dict()), defaultdict(lambda: dict())]
 
-    def copy_file(self, file, first_manager, second_manager):
-        if isinstance(first_manager, FtpFileManager) \
-                and isinstance(second_manager, FtpFileManager):
+        self.tmp_file = tmp_file
+
+        self.dirs = list()
+        self.curr_dir = ""
+
+    def copy_file(self, path_data: tuple, src: FileManager, dest: FileManager, dest_meta: dict) -> None:
+        if isinstance(src, FtpFileManager) \
+                and isinstance(dest, FtpFileManager):
             with open(self.tmp_file, 'wb') as fd:
-                first_manager.retrieve_file(file, fd)
+                src.retrieve_file(path_data, fd)
             with open(self.tmp_file, 'rb') as fd:
-                second_manager.save_file(file, fd)
+                dest.save_file(path_data, fd)
 
-        elif isinstance(first_manager, FtpFileManager):
-            fd = second_manager.open(filename=file, mode='w')
-            first_manager.retrieve_file(filename=file, fd_dest=fd)
-            second_manager.close(fd=fd)
+        elif isinstance(src, FtpFileManager):
+            if isinstance(dest, ZipFileManager) and path_data in dest_meta:
+                dest.remove_file(path_data)
+                dest.refresh()
+            fd = dest.open(path_data=path_data, mode='w')
+            src.retrieve_file(path_data=path_data, fd_dest=fd)
+            dest.close(fd=fd)
         else:
-            fd = first_manager.open(filename=file, mode='r')
-            second_manager.save_file(filename=file, fd_source=fd)
-            first_manager.close(fd=fd)
+            if isinstance(dest, ZipFileManager) and path_data in dest_meta:
+                dest.remove_file(path_data)
+                dest.refresh()
+            fd = src.open(path_data=path_data, mode='r')
+            dest.save_file(path_data=path_data, fd_source=fd)
+            src.close(fd=fd)
 
-    def syncronize_files(self):
-        current_dir = self.get_current_dir()
+    def initialise(self):
+        metas = [man.get_files_metadata() for man in self.mans]
+        self.snaps = [dict(meta) for meta in metas]
+        # compute a common format
+        for man_index, meta in enumerate(metas):
+            man = self.mans[man_index]
+            snap = self.snaps[man_index]
 
-        first_meta = self.first_manager.get_files_metadata()
-        second_meta = self.second_manager.get_files_metadata()
+            other_man_index = MAN_SIZE - man_index
+            other_meta = metas[other_man_index]
+            other_man = self.mans[other_man_index]
+            other_snap = self.snaps[other_man_index]
+            for path_data in meta:
+                # if it is not newer we do not proceed
+                if path_data in other_meta and meta[path_data] <= other_meta[path_data]:
+                    continue
+                other_man.mkdirs(path_data[:-1])
+                self.copy_file(path_data=path_data, src=man, dest=other_man, dest_meta=other_meta)
+                # update in memory
+                snap[path_data] = man.get_files_metadata()[path_data]
+                other_snap[path_data] = other_man.get_files_metadata()[path_data]
 
-        self.first_snapshot[current_dir] = dict(first_meta)
-        self.second_snapshot[current_dir] = dict(second_meta)
+    def keep_deleted(self):
+        metas = [man.get_files_metadata() for man in self.mans]
+        are_changes_done = False
+        for man_index, meta in enumerate(metas):
+            meta_keys = set(meta.keys())
+            snap = self.snaps[man_index]
+            snap_keys = set(snap.keys())
 
-        for file in first_meta:
-            if file in second_meta and first_meta[file] < second_meta[file]:
-                continue
+            to_be_del = snap_keys - meta_keys
+            other_man_index = MAN_SIZE - man_index
+            other_man = self.mans[other_man_index]
+            other_snap = self.snaps[other_man_index]
+            for path_data in to_be_del:
+                other_man.remove_file(path_data)
+                if path_data in other_snap:
+                    are_changes_done = True
+                    del other_snap[path_data]
+                if path_data in snap:
+                    are_changes_done = True
+                    del snap[path_data]
+            other_man.refresh()
+        return are_changes_done
 
-            self.copy_file(file=file, first_manager=self.first_manager, second_manager=self.second_manager)
-            tmp_meta = self.second_manager.get_files_metadata()
-            self.second_snapshot[current_dir][file] = tmp_meta[file]
-            second_meta = tmp_meta
+    def keep_created(self):
+        metas = [man.get_files_metadata() for man in self.mans]
+        are_changes_done = False
+        for man_index, meta in enumerate(metas):
+            man = self.mans[man_index]
+            meta_keys = set(meta.keys())
+            snap = self.snaps[man_index]
+            snap_keys = set(snap.keys())
 
-        for file in second_meta:
-            if file in first_meta and second_meta[file] < first_meta[file]:
-                continue
-            self.copy_file(file=file, first_manager=self.second_manager, second_manager=self.first_manager)
-            tmp_meta = self.first_manager.get_files_metadata()
-            self.first_snapshot[current_dir][file] = tmp_meta[file]
-            first_meta = tmp_meta
+            to_be_added = meta_keys - snap_keys
+            other_man_index = MAN_SIZE - man_index
+            other_man = self.mans[other_man_index]
+            other_meta = metas[other_man_index]
+            other_snap = self.snaps[other_man_index]
+            for path_data in to_be_added:
+                logging.info("File copied")
+                self.copy_file(path_data=path_data, src=man, dest=other_man, dest_meta=other_meta)
+                snap[path_data] = man.get_files_metadata()[path_data]
+                other_snap[path_data] = other_man.get_files_metadata()[path_data]
+                are_changes_done = True
+        return are_changes_done
 
-    def syncronize_dirs(self):
-        current_dir = self.get_current_dir()
-        first_dirs = set(self.first_manager.get_dirs())
-        second_dirs = set(self.second_manager.get_dirs())
+    def keep_updated(self):
+        metas = [man.get_files_metadata() for man in self.mans]
+        are_changes_done = False
+        for man_index, meta in enumerate(metas):
+            man = self.mans[man_index]
+            meta_keys = set(meta.keys())
+            snap = self.snaps[man_index]
+            snap_keys = set(snap.keys())
 
-        all_dirs = first_dirs | second_dirs
-        first_to_be_added = second_dirs - first_dirs
-        second_to_be_added = first_dirs - second_dirs
-        for directory in first_to_be_added:
-            self.first_manager.create_dir(directory)
-        for directory in second_to_be_added:
-            self.second_manager.create_dir(directory)
+            to_be_checked = meta_keys & snap_keys
+            other_man_index = MAN_SIZE - man_index
+            other_man = self.mans[other_man_index]
+            other_meta = metas[other_man_index]
+            other_snap = self.snaps[other_man_index]
+            for path_data in to_be_checked:
+                if meta[path_data] == snap[path_data]:
+                    continue
+                logging.info("File updated")
+                self.copy_file(path_data=path_data, src=man, dest=other_man, dest_meta=other_meta)
+                snap[path_data] = man.get_files_metadata()[path_data]
+                meta[path_data] = snap[path_data]
+                other_snap[path_data] = other_man.get_files_metadata()[path_data]
+                other_meta[path_data] = other_snap[path_data]
+                are_changes_done = True
+        return are_changes_done
 
-        for directory in all_dirs:
-            self.first_dir_snapshot[current_dir][directory] = None
-            self.second_dir_snapshot[current_dir][directory] = None
-        return all_dirs
-
-    def __run__(self):
-        current_dir = self.get_current_dir()
-        if current_dir == '':
-            current_dir = "base dir"
-        logging.info(f"Scanning dir {current_dir}")
-        self.syncronize_files()
-        all_dirs = self.syncronize_dirs()
-
-        for directory in all_dirs:
-            self.first_manager.dive_into_dir(directory)
-            self.second_manager.dive_into_dir(directory)
-            self.dir_list.append(directory)
-            self.__run__()
-            self.dir_list.pop()
-            self.first_manager.leave_dir()
-            self.second_manager.leave_dir()
+    def keep_sync(self):
+        if self.keep_deleted():
+            return
+        if self.keep_created():
+            return
+        self.keep_updated()
 
     def run(self):
-        self.first_manager.setup()
-        logging.info("Setup for first manager succeeded")
-        self.second_manager.setup()
-        logging.info("Setup for second manager succeeded")
-        self.__run__()
-
-    @staticmethod
-    def remove_file(file: str, manager: FileManager):
-        manager.remove_file(filename=file)
-
-    def get_current_dir(self):
-        current_dir = ''
-        if len(self.dir_list) > 0:
-            current_dir = os.path.join(*self.dir_list)
-        return current_dir
-
-    def refresh_created_files(self, manager: FileManager, other_manager: FileManager,
-                              snapshot: dict, other_snapshot: dict):
-        current_dir = self.get_current_dir()
-        meta = manager.get_files_metadata()
-        logging.info(f"[Create] Current meta from dir {current_dir}: {meta}")
-        snapshot_copy = dict(snapshot[current_dir])
-        logging.info(f"[Create] Current snapshot from dir {current_dir}: {snapshot_copy}")
-        for element in meta:
-            if element in snapshot_copy:
-                continue
-            logging.info(f"[Create][File] {element} from dir {current_dir} to manager {other_manager}")
-            self.copy_file(file=element,
-                           first_manager=manager,
-                           second_manager=other_manager)
-            tmp_meta = other_manager.get_files_metadata()
-            snapshot[current_dir][element] = meta[element]
-            other_snapshot[current_dir][element] = tmp_meta[element]
-
-    def refresh_updated_files(self,
-                              snapshot: dict,
-                              other_snapshot: dict,
-                              manager: FileManager, other_manager: FileManager):
-        current_dir = self.get_current_dir()
-        snapshot_copy = dict(snapshot[current_dir])
-        meta = manager.get_files_metadata()
-        logging.info(f"[Update] Current meta from dir {current_dir}: {meta}")
-        logging.info(f"[Update] Current snapshot copy from dir {current_dir}: {snapshot_copy}")
-        for element in meta:
-            if element not in snapshot_copy:
-                pass
-
-            if meta[element] != snapshot_copy[element]:
-                logging.info(f"[Update][File] {element} from {current_dir} from manager {other_manager} updated")
-                self.copy_file(file=element, first_manager=manager, second_manager=other_manager)
-                tmp_meta = other_manager.get_files_metadata()
-                other_snapshot[current_dir][element] = tmp_meta[element]
-                snapshot[current_dir][element] = meta[element]
-
-    def refresh_deleted_files(self, snapshot: dict, other_snapshot: dict,
-                              manager: FileManager, other_manager: FileManager, delete_index: int):
-        current_dir = self.get_current_dir()
-        meta = manager.get_files_metadata()
-        logging.info(f"[Delete] Current meta from dir {current_dir}: {meta}")
-        snapshot_copy = dict(snapshot[current_dir])
-        logging.info(f"[Delete] Current snapshot copy from dir {current_dir}: {snapshot_copy}")
-        for element in snapshot_copy:
-            if element in meta:
-                continue
-
-            self.is_changed[delete_index] = True
-            logging.info(f"[Delete][File] {element} from {other_manager}")
-            other_manager.remove_file(filename=element)
-            del snapshot[current_dir][element]
-            del other_snapshot[current_dir][element]
-        other_manager.refresh()
-
-    def refresh_files(self):
-        self.refresh_deleted_files(snapshot=self.first_snapshot, other_snapshot=self.second_snapshot,
-                                   manager=self.first_manager, other_manager=self.second_manager, delete_index=SECOND)
-
-        self.refresh_deleted_files(snapshot=self.second_snapshot, other_snapshot=self.first_snapshot,
-                                   manager=self.second_manager, other_manager=self.first_manager, delete_index=FIRST)
-
-        self.refresh_created_files(manager=self.first_manager, other_manager=self.second_manager,
-                                   snapshot=self.first_snapshot, other_snapshot=self.second_snapshot)
-
-        self.refresh_created_files(manager=self.second_manager, other_manager=self.first_manager,
-                                   snapshot=self.second_snapshot, other_snapshot=self.first_snapshot)
-
-        self.refresh_updated_files(snapshot=self.first_snapshot, other_snapshot=self.second_snapshot,
-                                   manager=self.first_manager, other_manager=self.second_manager)
-
-        self.refresh_updated_files(snapshot=self.second_snapshot, other_snapshot=self.first_snapshot,
-                                   manager=self.second_manager, other_manager=self.first_manager)
-
-    def refresh_created_dirs(self, manager: FileManager, snapshot: dict,
-                             other_manager: FileManager, other_snapshot: dict):
-        current_dir = self.get_current_dir()
-        dirs = set(manager.get_dirs())
-        new_dirs = set()
-        for directory in dirs:
-            if directory in snapshot[current_dir]:
-                continue
-            new_dirs.add(directory)
-            other_manager.create_dir(directory)
-            other_snapshot[current_dir][directory] = None
-        return new_dirs
-
-    def clean_dir_data(self, to_be_cleaned: dict, element: str, is_inner_dict: bool = False) -> None:
-        current_dir = self.get_current_dir()
-        base_element = os.path.basename(element)
-        if is_inner_dict:
-            del to_be_cleaned[current_dir][base_element]
-
-        to_be_removed_keys = list(filter(lambda x: x.startswith(element),
-                                         to_be_cleaned.keys()))
-        for key in to_be_removed_keys:
-            del to_be_cleaned[key]
-
-    def refresh_deleted_dirs(self, manager: FileManager,
-                             other_manager: FileManager,
-                             snapshot: dict,
-                             other_snapshot: dict,
-                             files_snapshot: dict,
-                             other_files_snapshot: dict) -> None:
-        current_dir = self.get_current_dir()
-        dirs = set(manager.get_dirs())
-
-        snapshot_copy = dict(snapshot[current_dir])
-        for element in snapshot_copy:
-            if element in dirs:
-                continue
-            other_manager.remove_dir(element)
-            full_element = os.path.join(current_dir, element)
-            self.clean_dir_data(to_be_cleaned=snapshot, element=full_element, is_inner_dict=True)
-            self.clean_dir_data(to_be_cleaned=other_snapshot, element=full_element, is_inner_dict=True)
-            self.clean_dir_data(to_be_cleaned=files_snapshot, element=full_element)
-            self.clean_dir_data(to_be_cleaned=other_files_snapshot, element=full_element)
-        manager.refresh()
-        other_manager.refresh()
-
-    def refresh_dirs(self):
-        first_dirs = set(self.first_manager.get_dirs())
-        second_dirs = set(self.second_manager.get_dirs())
-
-        added_dirs = self.refresh_created_dirs(manager=self.first_manager, snapshot=self.first_dir_snapshot,
-                                               other_manager=self.second_manager,
-                                               other_snapshot=self.second_dir_snapshot)
-        added_dirs |= self.refresh_created_dirs(manager=self.second_manager, snapshot=self.second_dir_snapshot,
-                                                other_manager=self.first_manager,
-                                                other_snapshot=self.first_dir_snapshot)
-
-        self.refresh_deleted_dirs(manager=self.first_manager, other_manager=self.second_manager,
-                                  snapshot=self.first_dir_snapshot, other_snapshot=self.second_dir_snapshot,
-                                  files_snapshot=self.first_snapshot, other_files_snapshot=self.second_snapshot)
-        self.refresh_deleted_dirs(manager=self.second_manager, other_manager=self.first_manager,
-                                  snapshot=self.second_dir_snapshot, other_snapshot=self.first_dir_snapshot,
-                                  files_snapshot=self.second_snapshot, other_files_snapshot=self.first_snapshot)
-
-        return (first_dirs & second_dirs) | added_dirs
-
-    def __keep_syncronized__(self):
-        self.refresh_files()
-        intersection_dirs = self.refresh_dirs()
-
-        for directory in intersection_dirs:
-            self.first_manager.dive_into_dir(directory)
-            self.second_manager.dive_into_dir(directory)
-            self.dir_list.append(directory)
-            self.__keep_syncronized__()
-            self.dir_list.pop()
-            self.first_manager.leave_dir()
-            self.second_manager.leave_dir()
-
-    def keep_syncronized(self):
+        for man in self.mans:
+            man.setup()
+            logging.info(f"Setup succeded for {man}")
+        self.initialise()
         while True:
-            self.is_changed = {
-                FIRST: False,
-                SECOND: False
-            }
-            try:
-                self.__keep_syncronized__()
-            except Exception as e:
-                print(e)
-            # logging.info(f"Is changed status {self.is_changed}")
-            if self.is_changed[FIRST]:
-                self.first_manager.refresh()
-            if self.is_changed[SECOND]:
-                self.second_manager.refresh()
-            time.sleep(5)
+            self.keep_sync()
+            time.sleep(1)

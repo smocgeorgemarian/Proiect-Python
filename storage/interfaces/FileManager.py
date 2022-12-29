@@ -11,11 +11,11 @@ class FileManager:
         pass
 
     @abstractmethod
-    def retrieve_file(self, filename: str, fd_dest) -> None:
+    def retrieve_file(self, path_data: tuple, fd_dest) -> None:
         pass
 
     @abstractmethod
-    def save_file(self, filename: str, fd_source) -> None:
+    def save_file(self, path_data: tuple, fd_source) -> None:
         pass
 
     @abstractmethod
@@ -35,7 +35,7 @@ class FileManager:
         pass
 
     @abstractmethod
-    def create_dir(self, directory: str) -> None:
+    def create_dir(self, path_data: tuple) -> None:
         pass
 
     @abstractmethod
@@ -43,7 +43,11 @@ class FileManager:
         pass
 
     @abstractmethod
-    def open(self, filename: str, mode: str = 'r') -> BinaryIO:
+    def mkdirs(self, dirs: list[str]) -> None:
+        pass
+
+    @abstractmethod
+    def open(self, path_data: tuple, mode: str = 'r') -> BinaryIO:
         pass
 
     @abstractmethod
@@ -51,7 +55,7 @@ class FileManager:
         pass
 
     @abstractmethod
-    def remove_file(self, filename: str) -> None:
+    def remove_file(self, path_data: tuple) -> None:
         pass
 
     @abstractmethod

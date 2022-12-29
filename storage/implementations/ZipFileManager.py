@@ -2,7 +2,7 @@ import logging
 import os
 import zipfile
 from datetime import datetime
-from pathlib import PurePath
+from pathlib import PurePath, Path
 from typing import Literal, BinaryIO, IO
 
 from storage.interfaces.FileManager import FileManager
@@ -15,6 +15,9 @@ BUFFER_SIZE = 8096
 
 
 class ZipFileManager(FileManager):
+    def mkdirs(self, dirs: list[str]) -> None:
+        pass
+
     def close(self, fd: BinaryIO) -> None:
         fd.close()
         self.last_man_opened_zip.close()
@@ -47,6 +50,9 @@ class ZipFileManager(FileManager):
             current_dir = ''
         return current_dir
 
+    def get_path_data(self, filename):
+        return tuple(Path(filename).parts)
+
     def is_file_in_current_dir(self, maybe_file: str) -> bool:
         if maybe_file.endswith(SEPARATOR):
             return False
@@ -55,23 +61,25 @@ class ZipFileManager(FileManager):
         return current_dir == maybe_file_parent_dir
 
     def get_files_metadata(self) -> dict:
+        data = {}
         with zipfile.ZipFile(self.path) as tmp_zip:
-            return {self.get_simple_name(file_meta.filename):
-                        self.to_millis_from_epoch(file_meta.date_time)
-                    for file_meta in tmp_zip.infolist()
-                    if self.is_file_in_current_dir(file_meta.filename)}
+            data = {self.get_path_data(file_meta.filename):
+                    self.to_millis_from_epoch(file_meta.date_time)
+                    for file_meta in tmp_zip.infolist()}
+        return data
 
-    def retrieve_file(self, filename: str, fd_dest: BinaryIO) -> None:
+    def retrieve_file(self, path_data: tuple, fd_dest: BinaryIO) -> None:
+        full_file_path = SEPARATOR.join(path_data)
         with zipfile.ZipFile(self.path, mode='r') as zip_fd:
-            with zip_fd.open(filename, mode='r') as fd:
+            with zip_fd.open(full_file_path, mode='r') as fd:
                 while True:
                     content = fd.read(BUFFER_SIZE)
                     if content == '':
                         break
                     fd_dest.write(content)
 
-    def save_file(self, filename: str, fd_source: IO[bytes]) -> None:
-        full_file_path = os.path.join(*self.current_dirs, filename)
+    def save_file(self, path_data: str, fd_source: IO[bytes]) -> None:
+        full_file_path = SEPARATOR.join(path_data)
         with zipfile.ZipFile(self.path, mode='a') as zip_fd:
             with zip_fd.open(full_file_path, mode='w') as fd:
                 while True:
@@ -80,8 +88,8 @@ class ZipFileManager(FileManager):
                         break
                     fd.write(content)
 
-    def open(self, filename, mode: Literal['r', 'w'] = 'r') -> IO[bytes]:
-        full_file_path = SEPARATOR.join([*self.current_dirs, filename])
+    def open(self, path_data: tuple, mode: Literal['r', 'w'] = 'r') -> IO[bytes]:
+        full_file_path = SEPARATOR.join(path_data)
         if mode == 'w':
             zip_file_mode = 'a'
         else:
@@ -126,15 +134,17 @@ class ZipFileManager(FileManager):
                           list(filter(lambda x: self.is_dir_in_current_dir(x), dirs))))
         return values
 
-    def create_dir(self, directory: str) -> None:
-        pass
+    def create_dir(self, path_data: tuple) -> None:
+        full_dir_path = "".join(f"{path_data}{SEPARATOR}")
+        zfi = zipfile.ZipInfo(full_dir_path)
+        with zipfile.ZipFile(self.path, mode='a') as zip_fd:
+            zip_fd.writestr(zfi, '')
 
-    def remove_dir(self, directory: str) -> None:
-        full_path_dir = os.path.join(*self.current_dirs, directory)
-        self.black_list.append(full_path_dir)
+    def remove_dir(self, path_data: tuple) -> None:
+        self.black_list.append(path_data)
 
-    def remove_file(self, filename: str) -> None:
-        full_path_file = SEPARATOR.join([*self.current_dirs, filename])
+    def remove_file(self, path_data: tuple) -> None:
+        full_path_file = SEPARATOR.join(path_data)
         self.black_list.append(full_path_file)
 
     def refresh(self) -> None:
@@ -143,16 +153,17 @@ class ZipFileManager(FileManager):
         logging.info(f"Current blacklist {self.black_list}")
         tmp_file_path = self.path + TMP_SUFFIX
         with zipfile.ZipFile(self.path, mode='r') as zip_fd:
-            for file_meta in zip_fd.infolist():
-                parent_dir = os.path.basename(file_meta.filename)
+            brute_infolist = zip_fd.infolist()
+            brute_infolist.sort(key=lambda x: x.is_dir())
 
-                if parent_dir in self.black_list:
-                    continue
-
+            for file_meta in brute_infolist:
                 if file_meta.filename in self.black_list:
                     continue
 
-                if file_meta.filename.endswith(SEPARATOR):
+                if file_meta.is_dir():
+                    with zipfile.ZipFile(tmp_file_path, mode='a') as tmp_zip_fd:
+                        zfi = zipfile.ZipInfo(filename=file_meta.filename)
+                        tmp_zip_fd.writestr(zfi, '')
                     continue
 
                 with zip_fd.open(name=file_meta.filename, mode='r') as fd:

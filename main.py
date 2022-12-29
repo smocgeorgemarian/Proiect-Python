@@ -33,16 +33,16 @@ def mock_setup():
 
 def main():
     # mock_setup()
-    logging.basicConfig(encoding='utf-8', level=logging.INFO)
-    argv = sys.argv[1:]
 
-    validator = ArgsValidator(argv=argv)
-    storage_types = validator.validate()
-    managers = FileManagerConfigurator.get_managers(argv, storage_types)
-
-    algorithm = InitAlgorithm(*managers)
-    algorithm.run()
-    algorithm.keep_syncronized()
+    # logging.basicConfig(encoding='utf-8', level=logging.INFO)
+    # argv = sys.argv[1:]
+    #
+    # validator = ArgsValidator(argv=argv)
+    # storage_types = validator.validate()
+    # managers = FileManagerConfigurator.get_managers(argv, storage_types)
+    #
+    # algorithm = InitAlgorithm(managers)
+    # algorithm.run()
 
 
 if __name__ == "__main__":
