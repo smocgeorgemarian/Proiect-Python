@@ -6,7 +6,20 @@ FILES = 1
 
 
 class FileManager:
+    """
+    Abstract class providing methods to be implemented for syncing a memory location
+
+    Attributes
+    ----------
+    conn_string : str
+        Connection string passed to the application, meant
+        to be processed by each class extending this class
+    """
+
     def __init__(self, conn_string: str) -> None:
+        """"
+
+        """
         self.conn_string = conn_string
 
     @abstractmethod
@@ -22,19 +35,7 @@ class FileManager:
         pass
 
     @abstractmethod
-    def dive_into_dir(self, directory: str) -> None:
-        pass
-
-    @abstractmethod
-    def leave_dir(self) -> None:
-        pass
-
-    @abstractmethod
     def get_files_metadata(self) -> dict:
-        pass
-
-    @abstractmethod
-    def get_dirs(self) -> list[str]:
         pass
 
     @abstractmethod
@@ -64,7 +65,3 @@ class FileManager:
     @abstractmethod
     def refresh(self) -> None:
         pass
-
-    @staticmethod
-    def close(fd: BinaryIO) -> None:
-        fd.close()

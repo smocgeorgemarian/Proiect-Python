@@ -23,13 +23,6 @@ class FolderFileManager(FileManager):
         self.metadata = dict()
         self.current_dirs = []
 
-    def dive_into_dir(self, child_dir: str):
-        if os.path.exists(os.path.join(self.path, *self.current_dirs, child_dir)):
-            self.current_dirs.append(child_dir)
-
-    def leave_current_dir(self):
-        self.current_dirs.pop()
-
     def setup(self):
         pass
 
@@ -48,9 +41,6 @@ class FolderFileManager(FileManager):
                 if content == b'':
                     break
                 fd.write(content)
-
-    def leave_dir(self):
-        self.current_dirs.pop()
 
     def get_files_metadata(self) -> dict:
         return_meta = dict()
@@ -72,11 +62,6 @@ class FolderFileManager(FileManager):
                 return_meta[path_data_obj] = os.stat(file_full_path).st_mtime
 
         return return_meta
-
-    def get_dirs(self):
-        full_root_path = os.path.join(self.path, *self.current_dirs)
-        return [maybe_dir for maybe_dir in os.listdir(full_root_path)
-                if os.path.isdir(os.path.join(full_root_path, maybe_dir))]
 
     def create_dir(self, path_data: tuple):
         full_dir_path = os.path.join(self.path, *path_data)

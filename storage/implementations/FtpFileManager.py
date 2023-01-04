@@ -116,12 +116,6 @@ class FtpFileManager(FileManager):
         files_data = [element for element in data if "DIR" in element[2]]
         return [file_data[3] for file_data in files_data]
 
-    def dive_into_dir(self, child_dir: str):
-        self.ftp.cwd(child_dir)
-
-    def leave_dir(self):
-        self.ftp.cwd("..")
-
     def retrieve_file(self, path_data: tuple, fd_dest):
         full_path = SEPARATOR.join(path_data)
         self.ftp.retrbinary(f"RETR {full_path}", fd_dest.write)
