@@ -5,7 +5,8 @@ from datetime import datetime
 from pathlib import PurePath, Path
 from typing import Literal, BinaryIO, IO
 
-from storage.interfaces.FileManager import FileManager, FOLDERS, FILES
+from storage.interfaces.FileManager import FileManager
+from storage.model.PathData import PathData
 
 TMP_SUFFIX = ".tmp"
 
@@ -28,7 +29,7 @@ class ZipFileManager(FileManager):
         self.path = conn_string.split("zip:")[1]
         self.zip = None
         self.current_dirs = []
-        self.black_list = []
+        self.black_list = set()
 
     def setup(self) -> None:
         the_zipfile = zipfile.ZipFile(self.path)
@@ -50,9 +51,6 @@ class ZipFileManager(FileManager):
             current_dir = ''
         return current_dir
 
-    def get_path_data(self, filename):
-        return tuple(Path(filename).parts)
-
     def is_file_in_current_dir(self, maybe_file: str) -> bool:
         if maybe_file.endswith(SEPARATOR):
             return False
@@ -61,19 +59,14 @@ class ZipFileManager(FileManager):
         return current_dir == maybe_file_parent_dir
 
     def get_files_metadata(self) -> dict:
-        data = {
-            FOLDERS: dict(),
-            FILES: dict()
-        }
+        data = dict()
         with zipfile.ZipFile(self.path) as tmp_zip:
             brute_infolist = tmp_zip.infolist()
 
             for file_meta in brute_infolist:
-                path_data = self.get_path_data(file_meta.filename)
-                if file_meta.is_dir():
-                    data[FOLDERS][path_data] = None
-                else:
-                    data[FILES][path_data] = self.to_millis_from_epoch(file_meta.date_time)
+                path_data = self.get_path_data(filename=file_meta.filename)
+                path_data_obj = PathData(path_data=path_data, is_file=not file_meta.is_dir())
+                data[path_data_obj] = self.to_millis_from_epoch(file_meta.date_time)
         return data
 
     def retrieve_file(self, path_data: tuple, fd_dest: BinaryIO) -> None:
@@ -98,10 +91,9 @@ class ZipFileManager(FileManager):
 
     def open(self, path_data: tuple, mode: Literal['r', 'w'] = 'r') -> IO[bytes]:
         full_file_path = SEPARATOR.join(path_data)
+        zip_file_mode = 'r'
         if mode == 'w':
             zip_file_mode = 'a'
-        else:
-            zip_file_mode = 'r'
 
         self.last_man_opened_zip = zipfile.ZipFile(self.path, mode=zip_file_mode)
         return self.last_man_opened_zip.open(name=full_file_path, mode=mode)
@@ -143,17 +135,17 @@ class ZipFileManager(FileManager):
         return values
 
     def create_dir(self, path_data: tuple) -> None:
+        logging.info(f"Creating dir: {path_data}")
         full_dir_path = SEPARATOR.join(path_data) + SEPARATOR
         zfi = zipfile.ZipInfo(full_dir_path)
         with zipfile.ZipFile(self.path, mode='a') as zip_fd:
             zip_fd.writestr(zfi, '')
 
     def remove_dir(self, path_data: tuple) -> None:
-        self.black_list.append(path_data)
+        self.black_list.add(path_data)
 
     def remove_file(self, path_data: tuple) -> None:
-        full_path_file = SEPARATOR.join(path_data)
-        self.black_list.append(full_path_file)
+        self.black_list.add(path_data)
 
     def refresh(self) -> None:
         if not self.black_list:
@@ -165,7 +157,9 @@ class ZipFileManager(FileManager):
             brute_infolist.sort(key=lambda x: x.is_dir())
 
             for file_meta in brute_infolist:
-                if file_meta.filename in self.black_list:
+                data = self.get_path_data(filename=file_meta.filename)
+                logging.info(f"Data: {data}")
+                if data in self.black_list:
                     continue
 
                 if file_meta.is_dir():
@@ -187,7 +181,11 @@ class ZipFileManager(FileManager):
         os.remove(self.path)
         os.rename(src=tmp_file_path, dst=self.path)
         os.chmod(self.path, status.st_mode)
-        self.black_list = []
+        self.black_list = set()
+
+    @staticmethod
+    def get_path_data(filename):
+        return tuple(Path(filename).parts)
 
     @staticmethod
     def get_simple_name(filename: str) -> str:

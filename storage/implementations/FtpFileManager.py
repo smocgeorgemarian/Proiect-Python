@@ -2,8 +2,8 @@ import logging
 from datetime import datetime
 from ftplib import FTP
 from typing import BinaryIO
-
-from storage.interfaces.FileManager import FileManager, FILES, FOLDERS
+from storage.interfaces.FileManager import FileManager
+from storage.model.PathData import PathData
 
 DEFAULT_PORT = 21
 
@@ -58,22 +58,6 @@ class FtpFileManager(FileManager):
         self.ftp.login(user=self.user, passwd=self.passwd)
         self.ftp.cwd(dirname=self.start_dir)
 
-    @staticmethod
-    def to_millis_from_str(input_date: str, input_hour: str):
-        date_time = [int(element) for element in input_date.split('-')]
-        date_time.reverse()
-        date_time[0] += 2000
-
-        delta_hour = 0
-        if input_hour.endswith('PM'):
-            delta_hour += 12
-        hour, minutes = input_hour.split(':')
-        minutes = minutes[:-2]
-        date_time.extend([(int(hour) + delta_hour) % 24, int(minutes)])
-
-        return (datetime(date_time[0], month=date_time[2], day=date_time[1], hour=date_time[3], minute=date_time[4]) -
-                datetime(1970, month=1, day=1)).total_seconds()
-
     def process_spaced_metadata(self, element: str) -> list:
         const_data = list(filter(lambda x: x, element.split(" ")))[:3]
         start_index = element.find(f" {const_data[2]} ")
@@ -89,12 +73,16 @@ class FtpFileManager(FileManager):
         const_data[3] = tuple(full_path)
         return const_data
 
+    def get_modif_date(self, path_data: tuple):
+        full_file_path = SEPARATOR.join(path_data)
+        modif_str = self.ftp.sendcmd(f'MDTM {full_file_path}').split(" ")[1]
+        modif_date = datetime.strptime(modif_str, "%Y%m%d%H%M%S")
+        epoch_date = datetime.strptime("19700101", "%Y%m%d")
+        return (modif_date - epoch_date).total_seconds()
+
     def get_files_metadata(self, index=0):
         if index == 0:
-            self.meta = {
-                FOLDERS: dict(),
-                FILES: dict()
-            }
+            self.meta = dict()
 
         content = []
         curr_dir = '.'
@@ -104,11 +92,13 @@ class FtpFileManager(FileManager):
         self.ftp.dir(curr_dir, content.append)
         data = [self.process_spaced_metadata(element) for element in content]
         files_data = [element for element in data if "DIR" not in element[2]]
-        self.meta[FILES].update({file_data[3]: self.to_millis_from_str(file_data[0], file_data[1])
-                                 for file_data in files_data})
+
+        self.meta.update(
+            {PathData(path_data=file_data[3]): self.get_modif_date(file_data[3])
+             for file_data in files_data})
 
         dirs_data = [element for element in data if "DIR" in element[2]]
-        self.meta[FOLDERS].update({dir_data[3]: None for dir_data in dirs_data})
+        self.meta.update({PathData(path_data=dir_data[3], is_file=False): None for dir_data in dirs_data})
         for dir_data in dirs_data:
             self.curr_dirs.append(dir_data[3][-1])
             self.get_files_metadata(index + 1)
@@ -145,9 +135,9 @@ class FtpFileManager(FileManager):
 
     def remove_dir(self, path_data):
         if len(path_data) == 1:
-            full_dir_path = path_data
+            full_dir_path = path_data[0]
         else:
-            full_dir_path = "." + SEPARATOR.join(path_data)
+            full_dir_path = "./" + SEPARATOR.join(path_data)
         content = self.ftp.nlst(full_dir_path)
         if not content:
             self.ftp.rmd(full_dir_path)

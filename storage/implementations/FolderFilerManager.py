@@ -3,7 +3,8 @@ import shutil
 from pathlib import Path
 from typing import BinaryIO
 
-from storage.interfaces.FileManager import FileManager, FOLDERS, FILES
+from storage.interfaces.FileManager import FileManager
+from storage.model.PathData import PathData
 
 BUFFER_SIZE = 8096
 
@@ -51,11 +52,8 @@ class FolderFileManager(FileManager):
     def leave_dir(self):
         self.current_dirs.pop()
 
-    def get_files_metadata(self):
-        return_meta = {
-            FOLDERS: dict(),
-            FILES: dict()
-        }
+    def get_files_metadata(self) -> dict:
+        return_meta = dict()
         prefix_size = len(Path(self.path).parts)
 
         for root, dirs, files in os.walk(self.path, topdown=False):
@@ -64,12 +62,14 @@ class FolderFileManager(FileManager):
 
             for directory in dirs:
                 path_data = tuple([*path_dir_data, directory])
-                return_meta[FOLDERS][path_data] = None
+                path_data_obj = PathData(path_data=path_data, is_file=False)
+                return_meta[path_data_obj] = None
 
             for file in files:
                 file_full_path = os.path.join(root, file)
                 path_data = tuple([*path_dir_data, file])
-                return_meta[FILES][path_data] = os.stat(file_full_path).st_mtime
+                path_data_obj = PathData(path_data=path_data)
+                return_meta[path_data_obj] = os.stat(file_full_path).st_mtime
 
         return return_meta
 

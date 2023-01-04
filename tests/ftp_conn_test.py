@@ -20,5 +20,11 @@ class MyTestCase(unittest.TestCase):
         data_after = manager.get_files_metadata()["Node.java"]
         a = 1
 
+    def test_mlds_command(self):
+        manager = FtpFileManager(conn_string="ftp:George Smoc:pass@localhost")
+        manager.setup()
+        ls = []
+        print(manager.ftp.sendcmd('MDTM a'))
+
 if __name__ == '__main__':
     unittest.main()

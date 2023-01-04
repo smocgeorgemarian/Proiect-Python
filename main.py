@@ -13,9 +13,18 @@ FOLDER_PATH = "H:\\ftp"
 
 def mock_setup():
     if os.path.exists(TEST_FILE):
-        os.remove(TEST_FILE)
+        while True:
+            try:
+                os.remove(TEST_FILE)
+                break
+            except Exception:
+                pass
+            except PermissionError:
+                pass
+
     tmp_zip = zipfile.ZipFile(TEST_FILE, 'w')
-    info = zipfile.ZipInfo("tests/")
+
+    info = zipfile.ZipInfo("tests/tests1/")
     tmp_zip.writestr(info, '')
 
     for content in ['a', 'b', 'c']:
@@ -23,10 +32,11 @@ def mock_setup():
             fd.write(str.encode(content))
     tmp_zip.close()
 
+
 def main():
     mock_setup()
 
-    logging.basicConfig(encoding='utf-8', level=logging.INFO)
+    logging.basicConfig(encoding='utf-8', level=logging.INFO, filename=os.path.join("logging", "last_run.log"))
     argv = sys.argv[1:]
 
     validator = ArgsValidator(argv=argv)

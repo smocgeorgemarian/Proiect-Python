@@ -4,6 +4,7 @@ from typing import BinaryIO
 FOLDERS = 0
 FILES = 1
 
+
 class FileManager:
     def __init__(self, conn_string: str) -> None:
         self.conn_string = conn_string
@@ -41,7 +42,7 @@ class FileManager:
         pass
 
     @abstractmethod
-    def remove_dir(self, directory: str) -> None:
+    def remove_dir(self, path_data: tuple) -> None:
         pass
 
     @abstractmethod
