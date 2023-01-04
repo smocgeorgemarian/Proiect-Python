@@ -28,7 +28,7 @@ class Algorithm:
         when transferring directly is not supported (e.g. ftp-ftp)
     """
 
-    def __init__(self, mans: tuple, tmp_file: str = 'tmp.file'):
+    def __init__(self, mans: tuple, tmp_file: str = 'tmp.file') -> None:
         """
         Parameters
         ----------
@@ -47,6 +47,24 @@ class Algorithm:
         self.tmp_file = tmp_file
 
     def copy_file(self, path_data: PathData, src: FileManager, dest: FileManager, dest_meta: dict) -> None:
+        """
+        Copies a file from source to destination.
+
+        The copy is supported via each combination of FileManager extensions and
+        overwrites the file if it exists in destination.
+
+        Parameters
+        ----------
+        path_data : PathData
+            Path to a file/folder relative to storage location
+        src : FileManager
+            Source manager of the file to be transferred
+        dest : FileManager
+            Destination manager of the file to be transferred
+        dest_meta : dict
+            Metadata of the destination needed when dest is ZipFileManager to check whether
+            the file with same name already exists in dest or not
+        """
         if isinstance(src, FtpFileManager) and isinstance(dest, FtpFileManager):
             with open(self.tmp_file, 'wb') as fd:
                 src.retrieve_file(path_data.path_data, fd)
@@ -69,7 +87,14 @@ class Algorithm:
             dest.save_file(path_data=path_data.path_data, fd_source=fd)
             src.close(fd=fd)
 
-    def initialise(self):
+    def initialise(self) -> None:
+        """
+        Does initialisation stage between the two locations.
+
+        Syncs the two locations initially, keeping the newest files by the modification date
+        in case of files with the same path (related to each location).
+        No deletion is done during this phase.
+        """
         try:
             metas = [man.get_files_metadata() for man in self.mans]
         except Exception as e:
@@ -110,7 +135,20 @@ class Algorithm:
                 except Exception as e:
                     logging.error(f"Could not copy file from manager {man} to {other_man}. Cause of error: {str(e)}")
 
-    def keep_deleted(self):
+    def keep_deleted(self) -> bool:
+        """
+        Deletes files that are no longer in one of a location
+
+        If a file from a location is no longer there it will be removed from the
+        other location and from snapshots of each location. If deletion fails cause
+        will be logged and deletion will be tried again later.
+
+        Returns
+        -------
+        are_changes_done: True
+            Notifies whether deletions were done so metadata should be updated accordingly.
+            Eventually appeared exceptions may result in metadata to be refreshed.
+        """
         try:
             metas = [man.get_files_metadata() for man in self.mans]
         except Exception as e:
@@ -150,6 +188,16 @@ class Algorithm:
         return are_changes_done
 
     def keep_created(self):
+        """
+        Copies files that do not exist in the destination location.
+
+        Files and dirs are created accordingly in the destination location based on
+        changes from source location.
+        Returns
+        -------
+        are_changes_done: True
+            Notifies whether creations were done so metadata should be updated accordingly.
+        """
         try:
             metas = [man.get_files_metadata() for man in self.mans]
         except Exception as e:
@@ -185,6 +233,16 @@ class Algorithm:
         return are_changes_done
 
     def keep_updated(self):
+        """
+        Updates files in the destination location.
+
+        Files that have modification date changed from one iteration to another will be
+        considered as modified and copied to the other location
+        Returns
+        -------
+        are_changes_done: True
+            Notifies whether updates were done so metadata should be updated accordingly.
+        """
         try:
             metas = [man.get_files_metadata() for man in self.mans]
         except Exception as e:
@@ -218,6 +276,12 @@ class Algorithm:
         return are_changes_done
 
     def keep_sync(self):
+        """
+        Keeps the locations synchronised at one moment of time (one iteration).
+
+        One iteration may consist of a deleting, creating or updating
+        stage (with active changes). Future updates may exclude this restriction per iteration.
+        """
         if self.keep_deleted():
             return
         if self.keep_created():
@@ -225,6 +289,12 @@ class Algorithm:
         self.keep_updated()
 
     def run(self):
+        """
+        Starts the application after initialising the managers.
+
+        Calls setup for each manager involved, does init-stage and then runs continuously
+        the one-iteration sync.
+        """
         for man in self.mans:
             try:
                 man.setup()
