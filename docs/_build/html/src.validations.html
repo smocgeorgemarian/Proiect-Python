@@ -1,0 +1,395 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>src.validations package &mdash; Advanced RSync 1.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="src.validations.exceptions package" href="src.validations.exceptions.html" />
+    <link rel="prev" title="src.storage.model package" href="src.storage.model.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Advanced RSync
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="src.html">src package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="src.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="src.algorithm.html">src.algorithm package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.html">src.storage package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">src.validations package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#module-src.main">src.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#module-src">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Advanced RSync</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">src</a> &raquo;</li>
+        
+          <li><a href="src.html">src package</a> &raquo;</li>
+        
+      <li>src.validations package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/src.validations.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="src-validations-package">
+<h1>src.validations package<a class="headerlink" href="#src-validations-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="src.validations.exceptions.html">src.validations.exceptions package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.validations.exceptions.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.validations.exceptions.html#module-src.validations.exceptions.ValidationException">src.validations.exceptions.ValidationException module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src.validations.exceptions.html#src.validations.exceptions.ValidationException.ValidationException"><code class="docutils literal notranslate"><span class="pre">ValidationException</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="src.validations.exceptions.html#module-src.validations.exceptions">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-src.validations.ArgsValidator">
+<span id="src-validations-argsvalidator-module"></span><h2>src.validations.ArgsValidator module<a class="headerlink" href="#module-src.validations.ArgsValidator" title="Permalink to this heading">¶</a></h2>
+<p>Validation module contains the enum class StorageType
+that maps to internal representation the connection strings.
+StorageType values are used later in manager factory.
+Prefix for ftp, zip and regex for validating ftp string pattern
+are also set here.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.validations.ArgsValidator.ArgsValidator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.validations.ArgsValidator.</span></span><span class="sig-name descname"><span class="pre">ArgsValidator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">argv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/validations/ArgsValidator.html#ArgsValidator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.validations.ArgsValidator.ArgsValidator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class used for validating</p>
+<p>Validates that the arguments match the regex/represent valid paths in
+the system depending on the platform and storage type</p>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>argv<span class="classifier">list</span></dt><dd><p>Arguments representing the locations to be synced</p>
+</dd>
+</dl>
+</section>
+<section id="methods">
+<h3>Methods<a class="headerlink" href="#methods" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>validate()</dt><dd><p>Maps the args the matching StorageType value</p>
+</dd>
+<dt>is_valid_ftp(conn_string: str)</dt><dd><p>Checks whether the ftp connection string matches regex format</p>
+</dd>
+<dt>is_valid_zip(path: str)</dt><dd><p>Checks whether the zip exists and is not corrupted</p>
+</dd>
+<dt>is_valid_folder(path: str)</dt><dd><p>Checks whether the folder exists</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.validations.ArgsValidator.ArgsValidator.is_valid_folder">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_valid_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/src/validations/ArgsValidator.html#ArgsValidator.is_valid_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.validations.ArgsValidator.ArgsValidator.is_valid_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether the path is a folder.</p>
+<section id="parameters">
+<h4>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">¶</a></h4>
+<dl class="simple">
+<dt>path<span class="classifier">str</span></dt><dd><p>Path to folder</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h4>Returns<a class="headerlink" href="#returns" title="Permalink to this heading">¶</a></h4>
+<dl class="simple">
+<dt>bool</dt><dd><p>Path is a folder</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.validations.ArgsValidator.ArgsValidator.is_valid_ftp">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_valid_ftp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/src/validations/ArgsValidator.html#ArgsValidator.is_valid_ftp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.validations.ArgsValidator.ArgsValidator.is_valid_ftp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether the connection string is ftp matches regex.</p>
+<section id="id1">
+<h4>Parameters<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h4>
+<dl class="simple">
+<dt>conn_string<span class="classifier">str</span></dt><dd><p>Connection string provided for usage of ftp, having a specific format
+consisting of: <a class="reference external" href="ftp:my_user:my_pass&#64;URL[/folder">ftp:my_user:my_pass&#64;URL[/folder</a>].</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h4>Returns<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h4>
+<dl class="simple">
+<dt>bool</dt><dd><p>Regex matches conn_string or not</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.validations.ArgsValidator.ArgsValidator.is_valid_zip">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_valid_zip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/src/validations/ArgsValidator.html#ArgsValidator.is_valid_zip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.validations.ArgsValidator.ArgsValidator.is_valid_zip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether the path is a valid .zip file.</p>
+<section id="id3">
+<h4>Parameters<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h4>
+<dl class="simple">
+<dt>path<span class="classifier">str</span></dt><dd><p>Path to zip file</p>
+</dd>
+</dl>
+</section>
+<section id="id4">
+<h4>Returns<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h4>
+<dl class="simple">
+<dt>bool</dt><dd><p>Path is a valid .zip file</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.validations.ArgsValidator.ArgsValidator.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#src.validations.ArgsValidator.StorageType" title="src.validations.ArgsValidator.StorageType"><span class="pre">src.validations.ArgsValidator.StorageType</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/validations/ArgsValidator.html#ArgsValidator.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.validations.ArgsValidator.ArgsValidator.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps the arguments to the matching storage type held in ~validations.ArgsValidator.StorageType.</p>
+<section id="id5">
+<h4>Returns<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h4>
+<dl class="simple">
+<dt>location_types<span class="classifier">tuple</span></dt><dd><p>Contains the matching StorageType object for every argv provided</p>
+</dd>
+</dl>
+</section>
+<section id="raises">
+<h4>Raises<a class="headerlink" href="#raises" title="Permalink to this heading">¶</a></h4>
+<dl class="simple">
+<dt>ValidationException</dt><dd><p>Class was instantiated with either wrong args or wrong number of args.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.validations.ArgsValidator.StorageType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.validations.ArgsValidator.</span></span><span class="sig-name descname"><span class="pre">StorageType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/validations/ArgsValidator.html#StorageType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.validations.ArgsValidator.StorageType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Class used as enum representing the type of storage</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.validations.ArgsValidator.StorageType.FOLDER">
+<span class="sig-name descname"><span class="pre">FOLDER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#src.validations.ArgsValidator.StorageType.FOLDER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.validations.ArgsValidator.StorageType.FTP">
+<span class="sig-name descname"><span class="pre">FTP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#src.validations.ArgsValidator.StorageType.FTP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.validations.ArgsValidator.StorageType.ZIP">
+<span class="sig-name descname"><span class="pre">ZIP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#src.validations.ArgsValidator.StorageType.ZIP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src.validations">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src.validations" title="Permalink to this heading">¶</a></h2>
+<p>Package that provides validation for command-line
+arguments. Specific exceptions are also implemented
+in exceptions sub-package.</p>
+</section>
+</section>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="src.validations.exceptions.html" class="btn btn-neutral float-right" title="src.validations.exceptions package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="src.storage.model.html" class="btn btn-neutral float-left" title="src.storage.model package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2023, George Smoc.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

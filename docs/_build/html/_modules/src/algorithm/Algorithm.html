@@ -1,0 +1,539 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>src.algorithm.Algorithm &mdash; Advanced RSync 1.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Advanced RSync
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">src</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Advanced RSync</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>src.algorithm.Algorithm</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for src.algorithm.Algorithm</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module used for syncing 2 locations. Contains Algorithm class</span>
+<span class="sd">that exposes all necessary methods for the operation mentioned</span>
+<span class="sd">above. Size of managers to be continuously synced is also set here.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+
+<span class="kn">from</span> <span class="nn">src.storage.implementations.FtpFileManager</span> <span class="kn">import</span> <span class="n">FtpFileManager</span>
+<span class="kn">from</span> <span class="nn">src.storage.implementations.ZipFileManager</span> <span class="kn">import</span> <span class="n">ZipFileManager</span>
+<span class="kn">from</span> <span class="nn">src.storage.interfaces.FileManager</span> <span class="kn">import</span> <span class="n">FileManager</span>
+<span class="kn">from</span> <span class="nn">src.storage.model.PathData</span> <span class="kn">import</span> <span class="n">PathData</span>
+
+
+<span class="n">MAN_SIZE</span> <span class="o">=</span> <span class="mi">1</span>
+
+
+<div class="viewcode-block" id="Algorithm"><a class="viewcode-back" href="../../../src.algorithm.html#src.algorithm.Algorithm.Algorithm">[docs]</a><span class="k">class</span> <span class="nc">Algorithm</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class used for applying continuously syncing between 2 locations</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mans : tuple</span>
+<span class="sd">        File managers used to apply files operations on storage locations</span>
+<span class="sd">    snaps : list</span>
+<span class="sd">        Snapshots of storage locations used to see whether changes are done</span>
+<span class="sd">        to a specific storage location</span>
+<span class="sd">    tmp_file : str</span>
+<span class="sd">        Temporary file used to transfer from one location to another</span>
+<span class="sd">        when transferring directly is not supported (e.g. ftp-ftp)</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    copy_file(path_data: PathData, src: FileManager, dest: FileManager, dest_meta: dict)</span>
+<span class="sd">        Copies the file from src do dest</span>
+<span class="sd">    initialise()</span>
+<span class="sd">        Syncs the 2 storage locations initially</span>
+<span class="sd">    keep_deleted()</span>
+<span class="sd">        Deletes files that have been removed from the other storage location</span>
+<span class="sd">    keep_updated()</span>
+<span class="sd">        Updates files that have been updated on the other storage location</span>
+<span class="sd">    keep_created()</span>
+<span class="sd">        Creates files that have been added on the other storage location</span>
+<span class="sd">    keep_sync()</span>
+<span class="sd">        Syncs using create, delete, update methods if the previous action had no changes</span>
+<span class="sd">    run()</span>
+<span class="sd">        Runs the sync method endlessly</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mans</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">tmp_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;tmp.file&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mans : tuple</span>
+<span class="sd">            Input file managers, typically constructed via</span>
+<span class="sd">            ~storage.config.FileManagerConfigurator.FileManagerConfigurator</span>
+<span class="sd">        tmp_file : str</span>
+<span class="sd">            Name of the file used for transfers that need intermediary storage,</span>
+<span class="sd">            (default is tmp.file)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mans</span> <span class="o">=</span> <span class="n">mans</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">snaps</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">dict</span><span class="p">()),</span>
+            <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">dict</span><span class="p">())</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp_file</span> <span class="o">=</span> <span class="n">tmp_file</span>
+
+<div class="viewcode-block" id="Algorithm.copy_file"><a class="viewcode-back" href="../../../src.algorithm.html#src.algorithm.Algorithm.Algorithm.copy_file">[docs]</a>    <span class="k">def</span> <span class="nf">copy_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="p">:</span> <span class="n">PathData</span><span class="p">,</span> <span class="n">src</span><span class="p">:</span> <span class="n">FileManager</span><span class="p">,</span> <span class="n">dest</span><span class="p">:</span> <span class="n">FileManager</span><span class="p">,</span> <span class="n">dest_meta</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Copies a file from source to destination.</span>
+
+<span class="sd">        The copy is supported via each combination of FileManager extensions and</span>
+<span class="sd">        overwrites the file if it exists in destination.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path_data : PathData</span>
+<span class="sd">            Path to a file/folder relative to storage location</span>
+<span class="sd">        src : FileManager</span>
+<span class="sd">            Source manager of the file to be transferred</span>
+<span class="sd">        dest : FileManager</span>
+<span class="sd">            Destination manager of the file to be transferred</span>
+<span class="sd">        dest_meta : dict</span>
+<span class="sd">            Metadata of the destination needed when dest is ZipFileManager to check whether</span>
+<span class="sd">            the file with same name already exists in dest or not</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">FtpFileManager</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">FtpFileManager</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_file</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
+                <span class="n">src</span><span class="o">.</span><span class="n">retrieve_file</span><span class="p">(</span><span class="n">path_data</span><span class="o">.</span><span class="n">path_data</span><span class="p">,</span> <span class="n">fd</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_file</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
+                <span class="n">dest</span><span class="o">.</span><span class="n">save_file</span><span class="p">(</span><span class="n">path_data</span><span class="o">.</span><span class="n">path_data</span><span class="p">,</span> <span class="n">fd</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">FtpFileManager</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">ZipFileManager</span><span class="p">)</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">in</span> <span class="n">dest_meta</span><span class="p">:</span>
+                <span class="n">dest</span><span class="o">.</span><span class="n">remove_file</span><span class="p">(</span><span class="n">path_data</span><span class="o">.</span><span class="n">path_data</span><span class="p">)</span>
+                <span class="n">dest</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+
+            <span class="n">fd</span> <span class="o">=</span> <span class="n">dest</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path_data</span><span class="o">=</span><span class="n">path_data</span><span class="o">.</span><span class="n">path_data</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+            <span class="n">src</span><span class="o">.</span><span class="n">retrieve_file</span><span class="p">(</span><span class="n">path_data</span><span class="o">=</span><span class="n">path_data</span><span class="o">.</span><span class="n">path_data</span><span class="p">,</span> <span class="n">fd_dest</span><span class="o">=</span><span class="n">fd</span><span class="p">)</span>
+            <span class="n">dest</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="o">=</span><span class="n">fd</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">ZipFileManager</span><span class="p">)</span> <span class="ow">and</span> <span class="n">path_data</span> <span class="ow">in</span> <span class="n">dest_meta</span><span class="p">:</span>
+                <span class="n">dest</span><span class="o">.</span><span class="n">remove_file</span><span class="p">(</span><span class="n">path_data</span><span class="o">.</span><span class="n">path_data</span><span class="p">)</span>
+                <span class="n">dest</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+            <span class="n">fd</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path_data</span><span class="o">=</span><span class="n">path_data</span><span class="o">.</span><span class="n">path_data</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+            <span class="n">dest</span><span class="o">.</span><span class="n">save_file</span><span class="p">(</span><span class="n">path_data</span><span class="o">=</span><span class="n">path_data</span><span class="o">.</span><span class="n">path_data</span><span class="p">,</span> <span class="n">fd_source</span><span class="o">=</span><span class="n">fd</span><span class="p">)</span>
+            <span class="n">src</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="o">=</span><span class="n">fd</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Algorithm.initialise"><a class="viewcode-back" href="../../../src.algorithm.html#src.algorithm.Algorithm.Algorithm.initialise">[docs]</a>    <span class="k">def</span> <span class="nf">initialise</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Does initialisation stage between the two locations.</span>
+
+<span class="sd">        Syncs the two locations initially, keeping the newest files by the modification date</span>
+<span class="sd">        in case of files with the same path (related to each location).</span>
+<span class="sd">        No deletion is done during this phase.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">metas</span> <span class="o">=</span> <span class="p">[</span><span class="n">man</span><span class="o">.</span><span class="n">get_files_metadata</span><span class="p">()</span> <span class="k">for</span> <span class="n">man</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mans</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not get files metadata. Cause of error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">snaps</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span> <span class="k">for</span> <span class="n">meta</span> <span class="ow">in</span> <span class="n">metas</span><span class="p">]</span>
+        <span class="c1"># compute a common format</span>
+        <span class="k">for</span> <span class="n">man_index</span><span class="p">,</span> <span class="n">meta</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">metas</span><span class="p">):</span>
+            <span class="n">other_man_index</span> <span class="o">=</span> <span class="n">MAN_SIZE</span> <span class="o">-</span> <span class="n">man_index</span>
+            <span class="n">man</span><span class="p">,</span> <span class="n">other_man</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mans</span><span class="p">[</span><span class="n">man_index</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">mans</span><span class="p">[</span><span class="n">other_man_index</span><span class="p">]</span>
+            <span class="n">snap</span><span class="p">,</span> <span class="n">other_snap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snaps</span><span class="p">[</span><span class="n">man_index</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">snaps</span><span class="p">[</span><span class="n">other_man_index</span><span class="p">]</span>
+            <span class="n">other_meta</span> <span class="o">=</span> <span class="n">metas</span><span class="p">[</span><span class="n">other_man_index</span><span class="p">]</span>
+
+            <span class="n">dirs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">is_file</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dirs of </span><span class="si">{</span><span class="n">man</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">dirs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">is_file</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Files of </span><span class="si">{</span><span class="n">man</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">files</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">path_data</span> <span class="ow">in</span> <span class="n">dirs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">path_data</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">other_meta</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">other_man</span><span class="o">.</span><span class="n">create_dir</span><span class="p">(</span><span class="n">path_data</span><span class="o">=</span><span class="n">path_data</span><span class="o">.</span><span class="n">path_data</span><span class="p">)</span>
+                        <span class="n">other_snap</span><span class="p">[</span><span class="n">path_data</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not create dir with path data: </span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">. Cause of error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">path_data</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+                <span class="c1"># if it is not newer we do not proceed</span>
+                <span class="k">if</span> <span class="n">path_data</span> <span class="ow">in</span> <span class="n">other_meta</span> <span class="ow">and</span> <span class="n">meta</span><span class="p">[</span><span class="n">path_data</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">other_meta</span><span class="p">[</span><span class="n">path_data</span><span class="p">]:</span>
+                    <span class="k">continue</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">other_man</span><span class="o">.</span><span class="n">mkdirs</span><span class="p">(</span><span class="n">path_data</span><span class="o">.</span><span class="n">path_data</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">copy_file</span><span class="p">(</span><span class="n">path_data</span><span class="o">=</span><span class="n">path_data</span><span class="p">,</span> <span class="n">src</span><span class="o">=</span><span class="n">man</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="n">other_man</span><span class="p">,</span> <span class="n">dest_meta</span><span class="o">=</span><span class="n">other_meta</span><span class="p">)</span>
+
+                    <span class="n">snap</span><span class="p">[</span><span class="n">path_data</span><span class="p">]</span> <span class="o">=</span> <span class="n">man</span><span class="o">.</span><span class="n">get_files_metadata</span><span class="p">()[</span><span class="n">path_data</span><span class="p">]</span>
+                    <span class="n">other_snap</span><span class="p">[</span><span class="n">path_data</span><span class="p">]</span> <span class="o">=</span> <span class="n">other_man</span><span class="o">.</span><span class="n">get_files_metadata</span><span class="p">()[</span><span class="n">path_data</span><span class="p">]</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not copy file from manager </span><span class="si">{</span><span class="n">man</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">other_man</span><span class="si">}</span><span class="s2">. Cause of error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Algorithm.keep_deleted"><a class="viewcode-back" href="../../../src.algorithm.html#src.algorithm.Algorithm.Algorithm.keep_deleted">[docs]</a>    <span class="k">def</span> <span class="nf">keep_deleted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deletes files that are no longer in one of a location</span>
+
+<span class="sd">        If a file from a location is no longer there it will be removed from the</span>
+<span class="sd">        other location and from snapshots of each location. If deletion fails cause</span>
+<span class="sd">        will be logged and deletion will be tried again later.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        are_changes_done : bool</span>
+<span class="sd">            Notifies whether deletions were done so metadata should be updated accordingly.</span>
+<span class="sd">            Eventually appeared exceptions may result in metadata to be refreshed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">metas</span> <span class="o">=</span> <span class="p">[</span><span class="n">man</span><span class="o">.</span><span class="n">get_files_metadata</span><span class="p">()</span> <span class="k">for</span> <span class="n">man</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mans</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not get files metadata. Cause of error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="n">are_changes_done</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">man_index</span><span class="p">,</span> <span class="n">meta</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">metas</span><span class="p">):</span>
+            <span class="n">other_man_index</span> <span class="o">=</span> <span class="n">MAN_SIZE</span> <span class="o">-</span> <span class="n">man_index</span>
+            <span class="n">other_man</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mans</span><span class="p">[</span><span class="n">other_man_index</span><span class="p">]</span>
+
+            <span class="n">snap</span><span class="p">,</span> <span class="n">other_snap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snaps</span><span class="p">[</span><span class="n">man_index</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">snaps</span><span class="p">[</span><span class="n">other_man_index</span><span class="p">]</span>
+
+            <span class="n">to_be_del</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">snap</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+                               <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">is_file</span><span class="p">,</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">path_data</span><span class="p">)))</span>
+
+            <span class="k">for</span> <span class="n">path_data</span> <span class="ow">in</span> <span class="n">to_be_del</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">path_data</span><span class="o">.</span><span class="n">is_file</span><span class="p">:</span>
+                        <span class="n">other_man</span><span class="o">.</span><span class="n">remove_file</span><span class="p">(</span><span class="n">path_data</span><span class="o">.</span><span class="n">path_data</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">other_man</span><span class="o">.</span><span class="n">remove_dir</span><span class="p">(</span><span class="n">path_data</span><span class="o">.</span><span class="n">path_data</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">path_data</span> <span class="ow">in</span> <span class="n">other_snap</span><span class="p">:</span>
+                        <span class="n">are_changes_done</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="k">del</span> <span class="n">other_snap</span><span class="p">[</span><span class="n">path_data</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">path_data</span> <span class="ow">in</span> <span class="n">snap</span><span class="p">:</span>
+                        <span class="n">are_changes_done</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="k">del</span> <span class="n">snap</span><span class="p">[</span><span class="n">path_data</span><span class="p">]</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not delete object </span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">. Cause of error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">other_man</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not refresh manager: </span><span class="si">{</span><span class="n">other_man</span><span class="si">}</span><span class="s2">. Cause of error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">are_changes_done</span></div>
+
+<div class="viewcode-block" id="Algorithm.keep_created"><a class="viewcode-back" href="../../../src.algorithm.html#src.algorithm.Algorithm.Algorithm.keep_created">[docs]</a>    <span class="k">def</span> <span class="nf">keep_created</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Copies files that do not exist in the destination location.</span>
+
+<span class="sd">        Files and dirs are created accordingly in the destination location based on</span>
+<span class="sd">        changes from source location.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        are_changes_done : True</span>
+<span class="sd">            Notifies whether creations were done so metadata should be updated accordingly.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">metas</span> <span class="o">=</span> <span class="p">[</span><span class="n">man</span><span class="o">.</span><span class="n">get_files_metadata</span><span class="p">()</span> <span class="k">for</span> <span class="n">man</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mans</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not get files metadata. Cause of error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="n">are_changes_done</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">man_index</span><span class="p">,</span> <span class="n">meta</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">metas</span><span class="p">):</span>
+            <span class="n">other_man_index</span> <span class="o">=</span> <span class="n">MAN_SIZE</span> <span class="o">-</span> <span class="n">man_index</span>
+            <span class="n">other_meta</span> <span class="o">=</span> <span class="n">metas</span><span class="p">[</span><span class="n">other_man_index</span><span class="p">]</span>
+
+            <span class="n">man</span><span class="p">,</span> <span class="n">other_man</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mans</span><span class="p">[</span><span class="n">man_index</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">mans</span><span class="p">[</span><span class="n">other_man_index</span><span class="p">]</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current meta: </span><span class="si">{</span><span class="n">meta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">snap</span><span class="p">,</span> <span class="n">other_snap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snaps</span><span class="p">[</span><span class="n">man_index</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">snaps</span><span class="p">[</span><span class="n">other_man_index</span><span class="p">]</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current snap: </span><span class="si">{</span><span class="n">snap</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">to_be_added</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">snap</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">is_file</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">path_data</span><span class="p">)))</span>
+            <span class="k">for</span> <span class="n">path_data</span> <span class="ow">in</span> <span class="n">to_be_added</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">path_data</span><span class="o">.</span><span class="n">is_file</span><span class="p">:</span>
+                        <span class="n">other_man</span><span class="o">.</span><span class="n">create_dir</span><span class="p">(</span><span class="n">path_data</span><span class="o">.</span><span class="n">path_data</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">copy_file</span><span class="p">(</span><span class="n">path_data</span><span class="o">=</span><span class="n">path_data</span><span class="p">,</span> <span class="n">src</span><span class="o">=</span><span class="n">man</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="n">other_man</span><span class="p">,</span> <span class="n">dest_meta</span><span class="o">=</span><span class="n">other_meta</span><span class="p">)</span>
+                    <span class="n">new_data</span> <span class="o">=</span> <span class="n">man</span><span class="o">.</span><span class="n">get_files_metadata</span><span class="p">()[</span><span class="n">path_data</span><span class="p">]</span>
+                    <span class="n">other_new_data</span> <span class="o">=</span> <span class="n">other_man</span><span class="o">.</span><span class="n">get_files_metadata</span><span class="p">()[</span><span class="n">path_data</span><span class="p">]</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not create object </span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">. Cause of error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="n">snap</span><span class="p">[</span><span class="n">path_data</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_data</span>
+                <span class="n">other_snap</span><span class="p">[</span><span class="n">path_data</span><span class="p">]</span> <span class="o">=</span> <span class="n">other_new_data</span>
+                <span class="n">other_meta</span><span class="p">[</span><span class="n">path_data</span><span class="p">]</span> <span class="o">=</span> <span class="n">other_new_data</span>
+
+        <span class="k">return</span> <span class="n">are_changes_done</span></div>
+
+<div class="viewcode-block" id="Algorithm.keep_updated"><a class="viewcode-back" href="../../../src.algorithm.html#src.algorithm.Algorithm.Algorithm.keep_updated">[docs]</a>    <span class="k">def</span> <span class="nf">keep_updated</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates files in the destination location.</span>
+
+<span class="sd">        Files that have modification date changed from one iteration to another will be</span>
+<span class="sd">        considered as modified and copied to the other location</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        are_changes_done : bool</span>
+<span class="sd">            Notifies whether updates were done so metadata should be updated accordingly.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">metas</span> <span class="o">=</span> <span class="p">[</span><span class="n">man</span><span class="o">.</span><span class="n">get_files_metadata</span><span class="p">()</span> <span class="k">for</span> <span class="n">man</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mans</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not get files metadata. Cause of error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="n">are_changes_done</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">man_index</span><span class="p">,</span> <span class="n">meta</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">metas</span><span class="p">):</span>
+            <span class="n">other_man_index</span> <span class="o">=</span> <span class="n">MAN_SIZE</span> <span class="o">-</span> <span class="n">man_index</span>
+            <span class="n">other_meta</span> <span class="o">=</span> <span class="n">metas</span><span class="p">[</span><span class="n">other_man_index</span><span class="p">]</span>
+
+            <span class="n">man</span><span class="p">,</span> <span class="n">other_man</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mans</span><span class="p">[</span><span class="n">man_index</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">mans</span><span class="p">[</span><span class="n">other_man_index</span><span class="p">]</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current meta: </span><span class="si">{</span><span class="n">meta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">snap</span><span class="p">,</span> <span class="n">other_snap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snaps</span><span class="p">[</span><span class="n">man_index</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">snaps</span><span class="p">[</span><span class="n">other_man_index</span><span class="p">]</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current snap: </span><span class="si">{</span><span class="n">snap</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">to_be_checked</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">is_file</span><span class="p">,</span>
+                                        <span class="nb">set</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">snap</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
+            <span class="k">for</span> <span class="n">path_data</span> <span class="ow">in</span> <span class="n">to_be_checked</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">meta</span><span class="p">[</span><span class="n">path_data</span><span class="p">]</span> <span class="o">==</span> <span class="n">snap</span><span class="p">[</span><span class="n">path_data</span><span class="p">]:</span>
+                    <span class="k">continue</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">copy_file</span><span class="p">(</span><span class="n">path_data</span><span class="o">=</span><span class="n">path_data</span><span class="p">,</span> <span class="n">src</span><span class="o">=</span><span class="n">man</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="n">other_man</span><span class="p">,</span> <span class="n">dest_meta</span><span class="o">=</span><span class="n">other_meta</span><span class="p">)</span>
+                    <span class="n">new_data</span> <span class="o">=</span> <span class="n">man</span><span class="o">.</span><span class="n">get_files_metadata</span><span class="p">()[</span><span class="n">path_data</span><span class="p">]</span>
+                    <span class="n">other_new_data</span> <span class="o">=</span> <span class="n">other_man</span><span class="o">.</span><span class="n">get_files_metadata</span><span class="p">()[</span><span class="n">path_data</span><span class="p">]</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not update object </span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">. Cause of error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="n">snap</span><span class="p">[</span><span class="n">path_data</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_data</span>
+                <span class="n">other_snap</span><span class="p">[</span><span class="n">path_data</span><span class="p">]</span> <span class="o">=</span> <span class="n">other_new_data</span>
+                <span class="n">other_meta</span><span class="p">[</span><span class="n">path_data</span><span class="p">]</span> <span class="o">=</span> <span class="n">other_new_data</span>
+        <span class="k">return</span> <span class="n">are_changes_done</span></div>
+
+<div class="viewcode-block" id="Algorithm.keep_sync"><a class="viewcode-back" href="../../../src.algorithm.html#src.algorithm.Algorithm.Algorithm.keep_sync">[docs]</a>    <span class="k">def</span> <span class="nf">keep_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Keeps the locations synchronised at one moment of time (one iteration).</span>
+
+<span class="sd">        One iteration may consist of a deleting, creating or updating</span>
+<span class="sd">        stage (with active changes). Future updates may exclude this restriction per iteration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_deleted</span><span class="p">():</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_created</span><span class="p">():</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keep_updated</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Algorithm.run"><a class="viewcode-back" href="../../../src.algorithm.html#src.algorithm.Algorithm.Algorithm.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Starts the application after initialising the managers.</span>
+
+<span class="sd">        Calls setup for each manager involved, does init-stage and then runs continuously</span>
+<span class="sd">        the one-iteration sync.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">man</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mans</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">man</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Setup failed for manager: </span><span class="si">{</span><span class="n">man</span><span class="si">}</span><span class="s2">. Cause of error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Setup succeeded for </span><span class="si">{</span><span class="n">man</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialise</span><span class="p">()</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">keep_sync</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2023, George Smoc.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

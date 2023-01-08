@@ -1,0 +1,419 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>src.storage.interfaces.FileManager &mdash; Advanced RSync 1.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Advanced RSync
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">src</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Advanced RSync</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>src.storage.interfaces.FileManager</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for src.storage.interfaces.FileManager</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">File manager interface used to define the methods for</span>
+<span class="sd">manipulating files, such as open, close, read and write</span>
+<span class="sd">and obtaining modification date based on which decisions</span>
+<span class="sd">of Algorithm are made.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">BinaryIO</span><span class="p">,</span> <span class="n">Literal</span>
+
+<span class="n">FOLDERS</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">FILES</span> <span class="o">=</span> <span class="mi">1</span>
+
+
+<div class="viewcode-block" id="FileManager"><a class="viewcode-back" href="../../../../src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager">[docs]</a><span class="k">class</span> <span class="nc">FileManager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract class providing methods to be implemented for syncing a memory location</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    conn_string : str</span>
+<span class="sd">        Connection string passed to the application, meant</span>
+<span class="sd">        to be processed by each class extending this class</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    setup()</span>
+<span class="sd">        Initial setup of the class (should be connection-related)</span>
+<span class="sd">    retrieve_file(path_data: tuple, fd_dest: BinaryIO)</span>
+<span class="sd">        Retrieves the file, writing it at destination</span>
+<span class="sd">    save_file(path_data: tuple, fd_source: BinaryIO)</span>
+<span class="sd">        Saves the file at the specified source</span>
+<span class="sd">    get_files_metadata()</span>
+<span class="sd">        Creates a dict where keys are PathData objects and values are</span>
+<span class="sd">        modification date and returns it</span>
+<span class="sd">    create_dir(path_data: tuple)</span>
+<span class="sd">        Creates a dir at specified path</span>
+<span class="sd">    remove_dir(path_data: tuple)</span>
+<span class="sd">        Removes dir from specified path</span>
+<span class="sd">    mkdirs(dirs: list[str])</span>
+<span class="sd">        Creates specified dirs sequence starting from root</span>
+<span class="sd">    open(path_data: tuple, mode: Literal[&#39;r&#39;, &#39;w&#39;] = &#39;r&#39;)</span>
+<span class="sd">        Opens the file from specified path in specified mode, mapped to binary</span>
+<span class="sd">    close(fd: BinaryIO)</span>
+<span class="sd">        Closes the file specified via file descriptor</span>
+<span class="sd">    remove_file(path_data: tuple):</span>
+<span class="sd">        Removes file specified by path</span>
+<span class="sd">    refresh()</span>
+<span class="sd">        Refreshes the content of the storage location</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        conn_string : str</span>
+<span class="sd">            Connection string passed to the application, meant</span>
+<span class="sd">            to be processed by each class extending this class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">conn_string</span> <span class="o">=</span> <span class="n">conn_string</span>
+
+<div class="viewcode-block" id="FileManager.setup"><a class="viewcode-back" href="../../../../src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.setup">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initial setup or any sort of arranging</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="FileManager.retrieve_file"><a class="viewcode-back" href="../../../../src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.retrieve_file">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">retrieve_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">fd_dest</span><span class="p">:</span> <span class="n">BinaryIO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Writes file specified to the destination descriptor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path_data : tuple</span>
+<span class="sd">            Relative path to the file, usually extracted from PathData object.</span>
+<span class="sd">        fd_dest : BinaryIO</span>
+<span class="sd">            File descriptor of the destination.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="FileManager.save_file"><a class="viewcode-back" href="../../../../src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.save_file">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">save_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">fd_source</span><span class="p">:</span> <span class="n">BinaryIO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Writes file specified to the storage location of current FileManager.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path_data : tuple</span>
+<span class="sd">            Relative path where the file should be created, usually extracted from PathData object.</span>
+<span class="sd">        fd_source : BinaryIO</span>
+<span class="sd">            File descriptor of the source.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="FileManager.get_files_metadata"><a class="viewcode-back" href="../../../../src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.get_files_metadata">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_files_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the metadata of all files and folders in the current storage location.</span>
+
+<span class="sd">        Parses the information about the files and folders and creates a common format,</span>
+<span class="sd">        so they can be used in sync algorithm.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Metadata stored with PathData object as key</span>
+<span class="sd">            and modification date as value (if necessary, None otherwise)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="FileManager.create_dir"><a class="viewcode-back" href="../../../../src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.create_dir">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">create_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a dir at specified relative path</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path_data : tuple</span>
+<span class="sd">            Relative path where the dir should be created, usually extracted from PathData object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="FileManager.remove_dir"><a class="viewcode-back" href="../../../../src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.remove_dir">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">remove_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes a dir at specified relative path</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path_data : tuple</span>
+<span class="sd">            Relative path where the dir to be deleted is located, usually extracted from PathData object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="FileManager.mkdirs"><a class="viewcode-back" href="../../../../src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.mkdirs">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">mkdirs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dirs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a specified dir sequence from root.</span>
+
+<span class="sd">        Silently ignores the case when one or more dirs exist, creating only</span>
+<span class="sd">        the necessary ones.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dirs : list</span>
+<span class="sd">            Sequence of dirs to be created (starting from root).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="FileManager.open"><a class="viewcode-back" href="../../../../src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.open">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryIO</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Opens the specified file in the specified mode.</span>
+
+<span class="sd">        Typically, mode is mapped to the binary equivalent for support between</span>
+<span class="sd">        different storage types reasons.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path_data : list</span>
+<span class="sd">            Relative path where the file to be deleted is located, usually extracted from PathData object.</span>
+<span class="sd">        mode : Literal</span>
+<span class="sd">            Specifies the mode in which the file should be opened, typically mapped to binary</span>
+<span class="sd">            equivalent</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        BinaryIO</span>
+<span class="sd">            The descriptor of the file to be used in different operations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="FileManager.close"><a class="viewcode-back" href="../../../../src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.close">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fd</span><span class="p">:</span> <span class="n">BinaryIO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Closes the specified file via file descriptor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fd : BinaryIO</span>
+<span class="sd">            File descriptor to be closed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="FileManager.remove_file"><a class="viewcode-back" href="../../../../src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.remove_file">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">remove_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_data</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes the specified file by relative path.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path_data : list</span>
+<span class="sd">            Relative path where the file to be deleted is located, usually extracted from PathData object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="FileManager.refresh"><a class="viewcode-back" href="../../../../src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.refresh">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Refreshes the content of the storage location.</span>
+
+<span class="sd">        Created as an extension that permits different actions between iterations</span>
+<span class="sd">        of sync algorithm. Currently, used for zip only.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">pass</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2023, George Smoc.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

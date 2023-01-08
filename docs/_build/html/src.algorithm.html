@@ -1,0 +1,380 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>src.algorithm package &mdash; Advanced RSync 1.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="src.storage package" href="src.storage.html" />
+    <link rel="prev" title="src package" href="src.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Advanced RSync
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="src.html">src package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="src.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">src.algorithm package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.html">src.storage package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.validations.html">src.validations package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#module-src.main">src.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#module-src">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Advanced RSync</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">src</a> &raquo;</li>
+        
+          <li><a href="src.html">src package</a> &raquo;</li>
+        
+      <li>src.algorithm package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/src.algorithm.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="src-algorithm-package">
+<h1>src.algorithm package<a class="headerlink" href="#src-algorithm-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-src.algorithm.Algorithm">
+<span id="src-algorithm-algorithm-module"></span><h2>src.algorithm.Algorithm module<a class="headerlink" href="#module-src.algorithm.Algorithm" title="Permalink to this heading">¶</a></h2>
+<p>Module used for syncing 2 locations. Contains Algorithm class
+that exposes all necessary methods for the operation mentioned
+above. Size of managers to be continuously synced is also set here.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.algorithm.Algorithm.Algorithm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.algorithm.Algorithm.</span></span><span class="sig-name descname"><span class="pre">Algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mans</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmp_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tmp.file'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/algorithm/Algorithm.html#Algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.algorithm.Algorithm.Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class used for applying continuously syncing between 2 locations</p>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>mans<span class="classifier">tuple</span></dt><dd><p>File managers used to apply files operations on storage locations</p>
+</dd>
+<dt>snaps<span class="classifier">list</span></dt><dd><p>Snapshots of storage locations used to see whether changes are done
+to a specific storage location</p>
+</dd>
+<dt>tmp_file<span class="classifier">str</span></dt><dd><p>Temporary file used to transfer from one location to another
+when transferring directly is not supported (e.g. ftp-ftp)</p>
+</dd>
+</dl>
+</section>
+<section id="methods">
+<h3>Methods<a class="headerlink" href="#methods" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>copy_file(path_data: PathData, src: FileManager, dest: FileManager, dest_meta: dict)</dt><dd><p>Copies the file from src do dest</p>
+</dd>
+<dt>initialise()</dt><dd><p>Syncs the 2 storage locations initially</p>
+</dd>
+<dt>keep_deleted()</dt><dd><p>Deletes files that have been removed from the other storage location</p>
+</dd>
+<dt>keep_updated()</dt><dd><p>Updates files that have been updated on the other storage location</p>
+</dd>
+<dt>keep_created()</dt><dd><p>Creates files that have been added on the other storage location</p>
+</dd>
+<dt>keep_sync()</dt><dd><p>Syncs using create, delete, update methods if the previous action had no changes</p>
+</dd>
+<dt>run()</dt><dd><p>Runs the sync method endlessly</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.algorithm.Algorithm.Algorithm.copy_file">
+<span class="sig-name descname"><span class="pre">copy_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="src.storage.model.html#src.storage.model.PathData.PathData" title="src.storage.model.PathData.PathData"><span class="pre">PathData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager" title="src.storage.interfaces.FileManager.FileManager"><span class="pre">FileManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager" title="src.storage.interfaces.FileManager.FileManager"><span class="pre">FileManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_meta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/algorithm/Algorithm.html#Algorithm.copy_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.algorithm.Algorithm.Algorithm.copy_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copies a file from source to destination.</p>
+<p>The copy is supported via each combination of FileManager extensions and
+overwrites the file if it exists in destination.</p>
+<section id="parameters">
+<h4>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">¶</a></h4>
+<dl class="simple">
+<dt>path_data<span class="classifier">PathData</span></dt><dd><p>Path to a file/folder relative to storage location</p>
+</dd>
+<dt>src<span class="classifier">FileManager</span></dt><dd><p>Source manager of the file to be transferred</p>
+</dd>
+<dt>dest<span class="classifier">FileManager</span></dt><dd><p>Destination manager of the file to be transferred</p>
+</dd>
+<dt>dest_meta<span class="classifier">dict</span></dt><dd><p>Metadata of the destination needed when dest is ZipFileManager to check whether
+the file with same name already exists in dest or not</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.algorithm.Algorithm.Algorithm.initialise">
+<span class="sig-name descname"><span class="pre">initialise</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/algorithm/Algorithm.html#Algorithm.initialise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.algorithm.Algorithm.Algorithm.initialise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Does initialisation stage between the two locations.</p>
+<p>Syncs the two locations initially, keeping the newest files by the modification date
+in case of files with the same path (related to each location).
+No deletion is done during this phase.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.algorithm.Algorithm.Algorithm.keep_created">
+<span class="sig-name descname"><span class="pre">keep_created</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/algorithm/Algorithm.html#Algorithm.keep_created"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.algorithm.Algorithm.Algorithm.keep_created" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copies files that do not exist in the destination location.</p>
+<p>Files and dirs are created accordingly in the destination location based on
+changes from source location.</p>
+<section id="returns">
+<h4>Returns<a class="headerlink" href="#returns" title="Permalink to this heading">¶</a></h4>
+<dl class="simple">
+<dt>are_changes_done<span class="classifier">True</span></dt><dd><p>Notifies whether creations were done so metadata should be updated accordingly.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.algorithm.Algorithm.Algorithm.keep_deleted">
+<span class="sig-name descname"><span class="pre">keep_deleted</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/src/algorithm/Algorithm.html#Algorithm.keep_deleted"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.algorithm.Algorithm.Algorithm.keep_deleted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes files that are no longer in one of a location</p>
+<p>If a file from a location is no longer there it will be removed from the
+other location and from snapshots of each location. If deletion fails cause
+will be logged and deletion will be tried again later.</p>
+<section id="id1">
+<h4>Returns<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h4>
+<dl class="simple">
+<dt>are_changes_done<span class="classifier">bool</span></dt><dd><p>Notifies whether deletions were done so metadata should be updated accordingly.
+Eventually appeared exceptions may result in metadata to be refreshed.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.algorithm.Algorithm.Algorithm.keep_sync">
+<span class="sig-name descname"><span class="pre">keep_sync</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/algorithm/Algorithm.html#Algorithm.keep_sync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.algorithm.Algorithm.Algorithm.keep_sync" title="Permalink to this definition">¶</a></dt>
+<dd><p>Keeps the locations synchronised at one moment of time (one iteration).</p>
+<p>One iteration may consist of a deleting, creating or updating
+stage (with active changes). Future updates may exclude this restriction per iteration.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.algorithm.Algorithm.Algorithm.keep_updated">
+<span class="sig-name descname"><span class="pre">keep_updated</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/algorithm/Algorithm.html#Algorithm.keep_updated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.algorithm.Algorithm.Algorithm.keep_updated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates files in the destination location.</p>
+<p>Files that have modification date changed from one iteration to another will be
+considered as modified and copied to the other location</p>
+<section id="id2">
+<h4>Returns<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h4>
+<dl class="simple">
+<dt>are_changes_done<span class="classifier">bool</span></dt><dd><p>Notifies whether updates were done so metadata should be updated accordingly.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.algorithm.Algorithm.Algorithm.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/algorithm/Algorithm.html#Algorithm.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.algorithm.Algorithm.Algorithm.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts the application after initialising the managers.</p>
+<p>Calls setup for each manager involved, does init-stage and then runs continuously
+the one-iteration sync.</p>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+<section id="module-src.algorithm">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src.algorithm" title="Permalink to this heading">¶</a></h2>
+<p>This package provides solutions for initial syncing
+and continuously updating the 2 locations accordingly
+in such a way that only the newest content is kept
+in case of any duplicates. The methods of syncing are
+implemented in Algorithm class provided by this package.</p>
+</section>
+</section>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="src.storage.html" class="btn btn-neutral float-right" title="src.storage package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="src.html" class="btn btn-neutral float-left" title="src package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2023, George Smoc.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

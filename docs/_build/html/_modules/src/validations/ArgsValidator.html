@@ -1,0 +1,355 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>src.validations.ArgsValidator &mdash; Advanced RSync 1.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Advanced RSync
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">src</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Advanced RSync</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>src.validations.ArgsValidator</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for src.validations.ArgsValidator</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Validation module contains the enum class StorageType</span>
+<span class="sd">that maps to internal representation the connection strings.</span>
+<span class="sd">StorageType values are used later in manager factory.</span>
+<span class="sd">Prefix for ftp, zip and regex for validating ftp string pattern</span>
+<span class="sd">are also set here.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os.path</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">zipfile</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+
+<span class="kn">from</span> <span class="nn">src.validations.exceptions.ValidationException</span> <span class="kn">import</span> <span class="n">ValidationException</span>
+
+<span class="n">FTP</span> <span class="o">=</span> <span class="s2">&quot;ftp&quot;</span>
+<span class="n">ZIP</span> <span class="o">=</span> <span class="s2">&quot;zip&quot;</span>
+
+
+<div class="viewcode-block" id="StorageType"><a class="viewcode-back" href="../../../src.validations.html#src.validations.ArgsValidator.StorageType">[docs]</a><span class="k">class</span> <span class="nc">StorageType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class used as enum representing the type of storage</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">FTP</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">ZIP</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">FOLDER</span> <span class="o">=</span> <span class="mi">3</span></div>
+
+
+<div class="viewcode-block" id="ArgsValidator"><a class="viewcode-back" href="../../../src.validations.html#src.validations.ArgsValidator.ArgsValidator">[docs]</a><span class="k">class</span> <span class="nc">ArgsValidator</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class used for validating</span>
+
+<span class="sd">    Validates that the arguments match the regex/represent valid paths in</span>
+<span class="sd">    the system depending on the platform and storage type</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    argv : list</span>
+<span class="sd">        Arguments representing the locations to be synced</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    validate()</span>
+<span class="sd">        Maps the args the matching StorageType value</span>
+<span class="sd">    is_valid_ftp(conn_string: str)</span>
+<span class="sd">        Checks whether the ftp connection string matches regex format</span>
+<span class="sd">    is_valid_zip(path: str)</span>
+<span class="sd">        Checks whether the zip exists and is not corrupted</span>
+<span class="sd">    is_valid_folder(path: str)</span>
+<span class="sd">        Checks whether the folder exists</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argv</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        argv : list</span>
+<span class="sd">            Arguments representing the locations to be synced</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">argv</span> <span class="o">=</span> <span class="n">argv</span>
+
+<div class="viewcode-block" id="ArgsValidator.validate"><a class="viewcode-back" href="../../../src.validations.html#src.validations.ArgsValidator.ArgsValidator.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">StorageType</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Maps the arguments to the matching storage type held in ~validations.ArgsValidator.StorageType.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        location_types : tuple</span>
+<span class="sd">            Contains the matching StorageType object for every argv provided</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValidationException</span>
+<span class="sd">            Class was instantiated with either wrong args or wrong number of args.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ValidationException</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;Script must receive 2 args&quot;</span><span class="p">)</span>
+
+        <span class="n">location_types</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">arg</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">FTP</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_valid_ftp</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="n">ValidationException</span><span class="p">(</span><span class="n">location_type</span><span class="o">=</span><span class="s2">&quot;FTP&quot;</span><span class="p">)</span>
+                <span class="n">location_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">StorageType</span><span class="o">.</span><span class="n">FTP</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">arg</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">ZIP</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_valid_zip</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="n">ValidationException</span><span class="p">(</span><span class="n">location_type</span><span class="o">=</span><span class="s2">&quot;ZIP&quot;</span><span class="p">)</span>
+                <span class="n">location_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">StorageType</span><span class="o">.</span><span class="n">ZIP</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_valid_folder</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="n">ValidationException</span><span class="p">(</span><span class="n">location_type</span><span class="o">=</span><span class="s2">&quot;LOCAL FOLDER&quot;</span><span class="p">)</span>
+                <span class="n">location_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">StorageType</span><span class="o">.</span><span class="n">FOLDER</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">location_types</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ArgsValidator.is_valid_ftp"><a class="viewcode-back" href="../../../src.validations.html#src.validations.ArgsValidator.ArgsValidator.is_valid_ftp">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_valid_ftp</span><span class="p">(</span><span class="n">conn_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks whether the connection string is ftp matches regex.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        conn_string : str</span>
+<span class="sd">            Connection string provided for usage of ftp, having a specific format</span>
+<span class="sd">            consisting of: ftp:my_user:my_pass@URL[/folder].</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        bool</span>
+<span class="sd">            Regex matches conn_string or not</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;ftp:(?#my_user).+:(?#my_pass).+@(?#URL)(/(?#folder)\w*)?&quot;</span><span class="p">,</span> <span class="n">conn_string</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ArgsValidator.is_valid_zip"><a class="viewcode-back" href="../../../src.validations.html#src.validations.ArgsValidator.ArgsValidator.is_valid_zip">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_valid_zip</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks whether the path is a valid .zip file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path : str</span>
+<span class="sd">            Path to zip file</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        bool</span>
+<span class="sd">            Path is a valid .zip file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">local_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;zip:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">is_zipfile</span><span class="p">(</span><span class="n">local_path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ArgsValidator.is_valid_folder"><a class="viewcode-back" href="../../../src.validations.html#src.validations.ArgsValidator.ArgsValidator.is_valid_folder">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_valid_folder</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks whether the path is a folder.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path : str</span>
+<span class="sd">            Path to folder</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        bool</span>
+<span class="sd">            Path is a folder</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2023, George Smoc.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

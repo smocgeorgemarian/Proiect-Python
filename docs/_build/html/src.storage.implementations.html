@@ -1,0 +1,764 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>src.storage.implementations package &mdash; Advanced RSync 1.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="src.storage.interfaces package" href="src.storage.interfaces.html" />
+    <link rel="prev" title="src.storage.config package" href="src.storage.config.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Advanced RSync
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="src.html">src package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="src.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="src.algorithm.html">src.algorithm package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="src.storage.html">src.storage package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.validations.html">src.validations package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#module-src.main">src.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#module-src">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Advanced RSync</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">src</a> &raquo;</li>
+        
+          <li><a href="src.html">src package</a> &raquo;</li>
+        
+          <li><a href="src.storage.html">src.storage package</a> &raquo;</li>
+        
+      <li>src.storage.implementations package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/src.storage.implementations.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="src-storage-implementations-package">
+<h1>src.storage.implementations package<a class="headerlink" href="#src-storage-implementations-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-src.storage.implementations.FolderFilerManager">
+<span id="src-storage-implementations-folderfilermanager-module"></span><h2>src.storage.implementations.FolderFilerManager module<a class="headerlink" href="#module-src.storage.implementations.FolderFilerManager" title="Permalink to this heading">¶</a></h2>
+<p>Module contains the manager for a local folder and methods
+that it should implement as a generic FileManager. Buffer
+size for I/O operations is also set here.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.storage.implementations.FolderFilerManager.FolderFileManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.storage.implementations.FolderFilerManager.</span></span><span class="sig-name descname"><span class="pre">FolderFileManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/storage/implementations/FolderFilerManager.html#FolderFileManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FolderFilerManager.FolderFileManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager" title="src.storage.interfaces.FileManager.FileManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileManager</span></code></a></p>
+<p>File Manager implementation for a local folder.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FolderFilerManager.FolderFileManager.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BinaryIO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/storage/implementations/FolderFilerManager.html#FolderFileManager.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FolderFilerManager.FolderFileManager.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Closes the specified file via file descriptor.</p>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>fd<span class="classifier">BinaryIO</span></dt><dd><p>File descriptor to be closed.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FolderFilerManager.FolderFileManager.create_dir">
+<span class="sig-name descname"><span class="pre">create_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/storage/implementations/FolderFilerManager.html#FolderFileManager.create_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FolderFilerManager.FolderFileManager.create_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a dir at specified relative path</p>
+<section id="id1">
+<h3>Parameters<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>path_data<span class="classifier">tuple</span></dt><dd><p>Relative path where the dir should be created, usually extracted from PathData object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FolderFilerManager.FolderFileManager.get_files_metadata">
+<span class="sig-name descname"><span class="pre">get_files_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/src/storage/implementations/FolderFilerManager.html#FolderFileManager.get_files_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FolderFilerManager.FolderFileManager.get_files_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the metadata of all files and folders in the current storage location.</p>
+<p>Parses the information about the files and folders and creates a common format,
+so they can be used in sync algorithm.</p>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>dict</dt><dd><p>Metadata stored with PathData object as key
+and modification date as value (if necessary, None otherwise)</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FolderFilerManager.FolderFileManager.mkdirs">
+<span class="sig-name descname"><span class="pre">mkdirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/storage/implementations/FolderFilerManager.html#FolderFileManager.mkdirs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FolderFilerManager.FolderFileManager.mkdirs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a specified dir sequence from root.</p>
+<p>Silently ignores the case when one or more dirs exist, creating only
+the necessary ones.</p>
+<section id="id2">
+<h3>Parameters<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>dirs<span class="classifier">list</span></dt><dd><p>Sequence of dirs to be created (starting from root).</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FolderFilerManager.FolderFileManager.open">
+<span class="sig-name descname"><span class="pre">open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'r'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/storage/implementations/FolderFilerManager.html#FolderFileManager.open"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FolderFilerManager.FolderFileManager.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens the specified file in the specified mode.</p>
+<p>Typically, mode is mapped to the binary equivalent for support between
+different storage types reasons.</p>
+<section id="id3">
+<h3>Parameters<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>path_data<span class="classifier">list</span></dt><dd><p>Relative path where the file to be deleted is located, usually extracted from PathData object.</p>
+</dd>
+<dt>mode<span class="classifier">Literal</span></dt><dd><p>Specifies the mode in which the file should be opened, typically mapped to binary
+equivalent</p>
+</dd>
+</dl>
+</section>
+<section id="id4">
+<h3>Returns<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>BinaryIO</dt><dd><p>The descriptor of the file to be used in different operations</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FolderFilerManager.FolderFileManager.refresh">
+<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/storage/implementations/FolderFilerManager.html#FolderFileManager.refresh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FolderFilerManager.FolderFileManager.refresh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refreshes the content of the storage location.</p>
+<p>Created as an extension that permits different actions between iterations
+of sync algorithm. Currently, used for zip only.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FolderFilerManager.FolderFileManager.remove_dir">
+<span class="sig-name descname"><span class="pre">remove_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/storage/implementations/FolderFilerManager.html#FolderFileManager.remove_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FolderFilerManager.FolderFileManager.remove_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes a dir at specified relative path</p>
+<section id="id5">
+<h3>Parameters<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>path_data<span class="classifier">tuple</span></dt><dd><p>Relative path where the dir to be deleted is located, usually extracted from PathData object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FolderFilerManager.FolderFileManager.remove_file">
+<span class="sig-name descname"><span class="pre">remove_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/storage/implementations/FolderFilerManager.html#FolderFileManager.remove_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FolderFilerManager.FolderFileManager.remove_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the specified file by relative path.</p>
+<section id="id6">
+<h3>Parameters<a class="headerlink" href="#id6" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>path_data<span class="classifier">list</span></dt><dd><p>Relative path where the file to be deleted is located, usually extracted from PathData object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FolderFilerManager.FolderFileManager.retrieve_file">
+<span class="sig-name descname"><span class="pre">retrieve_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fd_dest</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/storage/implementations/FolderFilerManager.html#FolderFileManager.retrieve_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FolderFilerManager.FolderFileManager.retrieve_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes file specified to the destination descriptor.</p>
+<section id="id7">
+<h3>Parameters<a class="headerlink" href="#id7" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>path_data<span class="classifier">tuple</span></dt><dd><p>Relative path to the file, usually extracted from PathData object.</p>
+</dd>
+<dt>fd_dest<span class="classifier">BinaryIO</span></dt><dd><p>File descriptor of the destination.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FolderFilerManager.FolderFileManager.save_file">
+<span class="sig-name descname"><span class="pre">save_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fd_source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/storage/implementations/FolderFilerManager.html#FolderFileManager.save_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FolderFilerManager.FolderFileManager.save_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes file specified to the storage location of current FileManager.</p>
+<section id="id8">
+<h3>Parameters<a class="headerlink" href="#id8" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>path_data<span class="classifier">tuple</span></dt><dd><p>Relative path where the file should be created, usually extracted from PathData object.</p>
+</dd>
+<dt>fd_source<span class="classifier">BinaryIO</span></dt><dd><p>File descriptor of the source.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FolderFilerManager.FolderFileManager.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/storage/implementations/FolderFilerManager.html#FolderFileManager.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FolderFilerManager.FolderFileManager.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial setup or any sort of arranging</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src.storage.implementations.FtpFileManager">
+<span id="src-storage-implementations-ftpfilemanager-module"></span><h2>src.storage.implementations.FtpFileManager module<a class="headerlink" href="#module-src.storage.implementations.FtpFileManager" title="Permalink to this heading">¶</a></h2>
+<p>Module contains the manager for a ftp folder and methods
+that it should implement as a generic FileManager. Default port,
+path separator and default timeout is also set here.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.storage.implementations.FtpFileManager.FtpFileManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.storage.implementations.FtpFileManager.</span></span><span class="sig-name descname"><span class="pre">FtpFileManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn_string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/storage/implementations/FtpFileManager.html#FtpFileManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FtpFileManager.FtpFileManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager" title="src.storage.interfaces.FileManager.FileManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileManager</span></code></a></p>
+<p>File Manager implementation for a ftp folder.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FtpFileManager.FtpFileManager.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BinaryIO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/storage/implementations/FtpFileManager.html#FtpFileManager.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FtpFileManager.FtpFileManager.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Closes the specified file via file descriptor.</p>
+<section id="id9">
+<h3>Parameters<a class="headerlink" href="#id9" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>fd<span class="classifier">BinaryIO</span></dt><dd><p>File descriptor to be closed.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FtpFileManager.FtpFileManager.create_dir">
+<span class="sig-name descname"><span class="pre">create_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/storage/implementations/FtpFileManager.html#FtpFileManager.create_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FtpFileManager.FtpFileManager.create_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a dir at specified relative path</p>
+<section id="id10">
+<h3>Parameters<a class="headerlink" href="#id10" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>path_data<span class="classifier">tuple</span></dt><dd><p>Relative path where the dir should be created, usually extracted from PathData object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FtpFileManager.FtpFileManager.get_dirs">
+<span class="sig-name descname"><span class="pre">get_dirs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/storage/implementations/FtpFileManager.html#FtpFileManager.get_dirs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FtpFileManager.FtpFileManager.get_dirs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FtpFileManager.FtpFileManager.get_files_metadata">
+<span class="sig-name descname"><span class="pre">get_files_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/storage/implementations/FtpFileManager.html#FtpFileManager.get_files_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FtpFileManager.FtpFileManager.get_files_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the metadata of all files and folders in the current storage location.</p>
+<p>Parses the information about the files and folders and creates a common format,
+so they can be used in sync algorithm.</p>
+<section id="id11">
+<h3>Returns<a class="headerlink" href="#id11" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>dict</dt><dd><p>Metadata stored with PathData object as key
+and modification date as value (if necessary, None otherwise)</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FtpFileManager.FtpFileManager.get_modif_date">
+<span class="sig-name descname"><span class="pre">get_modif_date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/storage/implementations/FtpFileManager.html#FtpFileManager.get_modif_date"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FtpFileManager.FtpFileManager.get_modif_date" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FtpFileManager.FtpFileManager.mkdirs">
+<span class="sig-name descname"><span class="pre">mkdirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/storage/implementations/FtpFileManager.html#FtpFileManager.mkdirs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FtpFileManager.FtpFileManager.mkdirs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a specified dir sequence from root.</p>
+<p>Silently ignores the case when one or more dirs exist, creating only
+the necessary ones.</p>
+<section id="id12">
+<h3>Parameters<a class="headerlink" href="#id12" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>dirs<span class="classifier">list</span></dt><dd><p>Sequence of dirs to be created (starting from root).</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FtpFileManager.FtpFileManager.open">
+<span class="sig-name descname"><span class="pre">open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'r'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/storage/implementations/FtpFileManager.html#FtpFileManager.open"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FtpFileManager.FtpFileManager.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens the specified file in the specified mode.</p>
+<p>Typically, mode is mapped to the binary equivalent for support between
+different storage types reasons.</p>
+<section id="id13">
+<h3>Parameters<a class="headerlink" href="#id13" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>path_data<span class="classifier">list</span></dt><dd><p>Relative path where the file to be deleted is located, usually extracted from PathData object.</p>
+</dd>
+<dt>mode<span class="classifier">Literal</span></dt><dd><p>Specifies the mode in which the file should be opened, typically mapped to binary
+equivalent</p>
+</dd>
+</dl>
+</section>
+<section id="id14">
+<h3>Returns<a class="headerlink" href="#id14" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>BinaryIO</dt><dd><p>The descriptor of the file to be used in different operations</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FtpFileManager.FtpFileManager.process_spaced_metadata">
+<span class="sig-name descname"><span class="pre">process_spaced_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/src/storage/implementations/FtpFileManager.html#FtpFileManager.process_spaced_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FtpFileManager.FtpFileManager.process_spaced_metadata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FtpFileManager.FtpFileManager.refresh">
+<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/storage/implementations/FtpFileManager.html#FtpFileManager.refresh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FtpFileManager.FtpFileManager.refresh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refreshes the content of the storage location.</p>
+<p>Created as an extension that permits different actions between iterations
+of sync algorithm. Currently, used for zip only.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FtpFileManager.FtpFileManager.remove_dir">
+<span class="sig-name descname"><span class="pre">remove_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/storage/implementations/FtpFileManager.html#FtpFileManager.remove_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FtpFileManager.FtpFileManager.remove_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes a dir at specified relative path</p>
+<section id="id15">
+<h3>Parameters<a class="headerlink" href="#id15" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>path_data<span class="classifier">tuple</span></dt><dd><p>Relative path where the dir to be deleted is located, usually extracted from PathData object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FtpFileManager.FtpFileManager.remove_file">
+<span class="sig-name descname"><span class="pre">remove_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/storage/implementations/FtpFileManager.html#FtpFileManager.remove_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FtpFileManager.FtpFileManager.remove_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the specified file by relative path.</p>
+<section id="id16">
+<h3>Parameters<a class="headerlink" href="#id16" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>path_data<span class="classifier">list</span></dt><dd><p>Relative path where the file to be deleted is located, usually extracted from PathData object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FtpFileManager.FtpFileManager.retrieve_file">
+<span class="sig-name descname"><span class="pre">retrieve_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fd_dest</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/storage/implementations/FtpFileManager.html#FtpFileManager.retrieve_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FtpFileManager.FtpFileManager.retrieve_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes file specified to the destination descriptor.</p>
+<section id="id17">
+<h3>Parameters<a class="headerlink" href="#id17" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>path_data<span class="classifier">tuple</span></dt><dd><p>Relative path to the file, usually extracted from PathData object.</p>
+</dd>
+<dt>fd_dest<span class="classifier">BinaryIO</span></dt><dd><p>File descriptor of the destination.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FtpFileManager.FtpFileManager.save_file">
+<span class="sig-name descname"><span class="pre">save_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fd_source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/storage/implementations/FtpFileManager.html#FtpFileManager.save_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FtpFileManager.FtpFileManager.save_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes file specified to the storage location of current FileManager.</p>
+<section id="id18">
+<h3>Parameters<a class="headerlink" href="#id18" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>path_data<span class="classifier">tuple</span></dt><dd><p>Relative path where the file should be created, usually extracted from PathData object.</p>
+</dd>
+<dt>fd_source<span class="classifier">BinaryIO</span></dt><dd><p>File descriptor of the source.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.FtpFileManager.FtpFileManager.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/storage/implementations/FtpFileManager.html#FtpFileManager.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.FtpFileManager.FtpFileManager.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial setup or any sort of arranging</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src.storage.implementations.ZipFileManager">
+<span id="src-storage-implementations-zipfilemanager-module"></span><h2>src.storage.implementations.ZipFileManager module<a class="headerlink" href="#module-src.storage.implementations.ZipFileManager" title="Permalink to this heading">¶</a></h2>
+<p>Module contains the manager for a zip file and methods
+that it should implement as a generic FileManager. Buffer
+size for I/O operations, separator for paths and tmp file for
+refreshing the zip is also set here.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.storage.implementations.ZipFileManager.ZipFileManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.storage.implementations.ZipFileManager.</span></span><span class="sig-name descname"><span class="pre">ZipFileManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/storage/implementations/ZipFileManager.html#ZipFileManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.ZipFileManager.ZipFileManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager" title="src.storage.interfaces.FileManager.FileManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileManager</span></code></a></p>
+<p>File Manager implementation for a zip file.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.ZipFileManager.ZipFileManager.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BinaryIO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/storage/implementations/ZipFileManager.html#ZipFileManager.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.ZipFileManager.ZipFileManager.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Closes the specified file via file descriptor.</p>
+<section id="id19">
+<h3>Parameters<a class="headerlink" href="#id19" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>fd<span class="classifier">BinaryIO</span></dt><dd><p>File descriptor to be closed.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.ZipFileManager.ZipFileManager.create_dir">
+<span class="sig-name descname"><span class="pre">create_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/storage/implementations/ZipFileManager.html#ZipFileManager.create_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.ZipFileManager.ZipFileManager.create_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a dir at specified relative path</p>
+<section id="id20">
+<h3>Parameters<a class="headerlink" href="#id20" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>path_data<span class="classifier">tuple</span></dt><dd><p>Relative path where the dir should be created, usually extracted from PathData object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.ZipFileManager.ZipFileManager.get_files_metadata">
+<span class="sig-name descname"><span class="pre">get_files_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/src/storage/implementations/ZipFileManager.html#ZipFileManager.get_files_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.ZipFileManager.ZipFileManager.get_files_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the metadata of all files and folders in the current storage location.</p>
+<p>Parses the information about the files and folders and creates a common format,
+so they can be used in sync algorithm.</p>
+<section id="id21">
+<h3>Returns<a class="headerlink" href="#id21" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>dict</dt><dd><p>Metadata stored with PathData object as key
+and modification date as value (if necessary, None otherwise)</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.ZipFileManager.ZipFileManager.get_path_data">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_path_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="_modules/src/storage/implementations/ZipFileManager.html#ZipFileManager.get_path_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.ZipFileManager.ZipFileManager.get_path_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.ZipFileManager.ZipFileManager.mkdirs">
+<span class="sig-name descname"><span class="pre">mkdirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/storage/implementations/ZipFileManager.html#ZipFileManager.mkdirs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.ZipFileManager.ZipFileManager.mkdirs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a specified dir sequence from root.</p>
+<p>Silently ignores the case when one or more dirs exist, creating only
+the necessary ones.</p>
+<section id="id22">
+<h3>Parameters<a class="headerlink" href="#id22" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>dirs<span class="classifier">list</span></dt><dd><p>Sequence of dirs to be created (starting from root).</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.ZipFileManager.ZipFileManager.open">
+<span class="sig-name descname"><span class="pre">open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'r'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'w'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'r'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/storage/implementations/ZipFileManager.html#ZipFileManager.open"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.ZipFileManager.ZipFileManager.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens the specified file in the specified mode.</p>
+<p>Typically, mode is mapped to the binary equivalent for support between
+different storage types reasons.</p>
+<section id="id23">
+<h3>Parameters<a class="headerlink" href="#id23" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>path_data<span class="classifier">list</span></dt><dd><p>Relative path where the file to be deleted is located, usually extracted from PathData object.</p>
+</dd>
+<dt>mode<span class="classifier">Literal</span></dt><dd><p>Specifies the mode in which the file should be opened, typically mapped to binary
+equivalent</p>
+</dd>
+</dl>
+</section>
+<section id="id24">
+<h3>Returns<a class="headerlink" href="#id24" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>BinaryIO</dt><dd><p>The descriptor of the file to be used in different operations</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.ZipFileManager.ZipFileManager.refresh">
+<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/storage/implementations/ZipFileManager.html#ZipFileManager.refresh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.ZipFileManager.ZipFileManager.refresh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refreshes the content of the storage location.</p>
+<p>Created as an extension that permits different actions between iterations
+of sync algorithm. Currently, used for zip only.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.ZipFileManager.ZipFileManager.remove_dir">
+<span class="sig-name descname"><span class="pre">remove_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/storage/implementations/ZipFileManager.html#ZipFileManager.remove_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.ZipFileManager.ZipFileManager.remove_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes a dir at specified relative path</p>
+<section id="id25">
+<h3>Parameters<a class="headerlink" href="#id25" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>path_data<span class="classifier">tuple</span></dt><dd><p>Relative path where the dir to be deleted is located, usually extracted from PathData object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.ZipFileManager.ZipFileManager.remove_file">
+<span class="sig-name descname"><span class="pre">remove_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/storage/implementations/ZipFileManager.html#ZipFileManager.remove_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.ZipFileManager.ZipFileManager.remove_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the specified file by relative path.</p>
+<section id="id26">
+<h3>Parameters<a class="headerlink" href="#id26" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>path_data<span class="classifier">list</span></dt><dd><p>Relative path where the file to be deleted is located, usually extracted from PathData object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.ZipFileManager.ZipFileManager.retrieve_file">
+<span class="sig-name descname"><span class="pre">retrieve_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fd_dest</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/storage/implementations/ZipFileManager.html#ZipFileManager.retrieve_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.ZipFileManager.ZipFileManager.retrieve_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes file specified to the destination descriptor.</p>
+<section id="id27">
+<h3>Parameters<a class="headerlink" href="#id27" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>path_data<span class="classifier">tuple</span></dt><dd><p>Relative path to the file, usually extracted from PathData object.</p>
+</dd>
+<dt>fd_dest<span class="classifier">BinaryIO</span></dt><dd><p>File descriptor of the destination.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.ZipFileManager.ZipFileManager.save_file">
+<span class="sig-name descname"><span class="pre">save_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fd_source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">IO</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/storage/implementations/ZipFileManager.html#ZipFileManager.save_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.ZipFileManager.ZipFileManager.save_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes file specified to the storage location of current FileManager.</p>
+<section id="id28">
+<h3>Parameters<a class="headerlink" href="#id28" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>path_data<span class="classifier">tuple</span></dt><dd><p>Relative path where the file should be created, usually extracted from PathData object.</p>
+</dd>
+<dt>fd_source<span class="classifier">BinaryIO</span></dt><dd><p>File descriptor of the source.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.ZipFileManager.ZipFileManager.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/storage/implementations/ZipFileManager.html#ZipFileManager.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.ZipFileManager.ZipFileManager.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial setup or any sort of arranging</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.storage.implementations.ZipFileManager.ZipFileManager.to_millis_from_epoch">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">to_millis_from_epoch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/src/storage/implementations/ZipFileManager.html#ZipFileManager.to_millis_from_epoch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.storage.implementations.ZipFileManager.ZipFileManager.to_millis_from_epoch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src.storage.implementations">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src.storage.implementations" title="Permalink to this heading">¶</a></h2>
+<p>Package for implementations of FileManager. Currently, supporting
+local folder file manager, ftp file manager and zip file manager
+with methods for manipulating files and folders, obtainining their
+modification date and structure of the whole storage location
+in a common format.</p>
+</section>
+</section>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="src.storage.interfaces.html" class="btn btn-neutral float-right" title="src.storage.interfaces package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="src.storage.config.html" class="btn btn-neutral float-left" title="src.storage.config package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2023, George Smoc.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 import unittest
 import zipfile
 
-from storage.implementations.ZipFileManager import ZipFileManager
+from src.storage.implementations.ZipFileManager import ZipFileManager
 
 CONN_STRING = "./../tests.zip"
 

@@ -1,6 +1,6 @@
 import unittest
 
-from storage.model.PathData import PathData
+from src.storage import PathData
 
 
 class PathDataTest(unittest.TestCase):

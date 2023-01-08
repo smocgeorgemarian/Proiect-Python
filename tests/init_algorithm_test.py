@@ -1,9 +1,9 @@
 import unittest
 
-from algorithm.Algorithm import Algorithm
-from storage.implementations.FolderFilerManager import FolderFileManager
-from storage.implementations.FtpFileManager import FtpFileManager
-from storage.implementations.ZipFileManager import ZipFileManager
+from src.algorithm.Algorithm import Algorithm
+from src.storage import FolderFileManager
+from src.storage.implementations.FtpFileManager import FtpFileManager
+from src.storage.implementations.ZipFileManager import ZipFileManager
 
 ZIP_CONN_STRING = "H:\\Anul 3\\Proiect-Python\\file.zip"
 

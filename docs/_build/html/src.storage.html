@@ -1,0 +1,349 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>src.storage package &mdash; Advanced RSync 1.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="src.storage.config package" href="src.storage.config.html" />
+    <link rel="prev" title="src.algorithm package" href="src.algorithm.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Advanced RSync
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="src.html">src package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="src.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="src.algorithm.html">src.algorithm package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">src.storage package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.validations.html">src.validations package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#module-src.main">src.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#module-src">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Advanced RSync</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">src</a> &raquo;</li>
+        
+          <li><a href="src.html">src package</a> &raquo;</li>
+        
+      <li>src.storage package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/src.storage.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="src-storage-package">
+<h1>src.storage package<a class="headerlink" href="#src-storage-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="src.storage.config.html">src.storage.config package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.storage.config.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.storage.config.html#module-src.storage.config.FileManagerConfigurator">src.storage.config.FileManagerConfigurator module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src.storage.config.html#src.storage.config.FileManagerConfigurator.FileManagerConfigurator"><code class="docutils literal notranslate"><span class="pre">FileManagerConfigurator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.config.html#src.storage.config.FileManagerConfigurator.FileManagerConfigurator.get_managers"><code class="docutils literal notranslate"><span class="pre">FileManagerConfigurator.get_managers()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="src.storage.config.html#module-src.storage.config">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.storage.implementations.html">src.storage.implementations package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.storage.implementations.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.storage.implementations.html#module-src.storage.implementations.FolderFilerManager">src.storage.implementations.FolderFilerManager module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FolderFilerManager.FolderFileManager"><code class="docutils literal notranslate"><span class="pre">FolderFileManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FolderFilerManager.FolderFileManager.close"><code class="docutils literal notranslate"><span class="pre">FolderFileManager.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FolderFilerManager.FolderFileManager.create_dir"><code class="docutils literal notranslate"><span class="pre">FolderFileManager.create_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FolderFilerManager.FolderFileManager.get_files_metadata"><code class="docutils literal notranslate"><span class="pre">FolderFileManager.get_files_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FolderFilerManager.FolderFileManager.mkdirs"><code class="docutils literal notranslate"><span class="pre">FolderFileManager.mkdirs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FolderFilerManager.FolderFileManager.open"><code class="docutils literal notranslate"><span class="pre">FolderFileManager.open()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FolderFilerManager.FolderFileManager.refresh"><code class="docutils literal notranslate"><span class="pre">FolderFileManager.refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FolderFilerManager.FolderFileManager.remove_dir"><code class="docutils literal notranslate"><span class="pre">FolderFileManager.remove_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FolderFilerManager.FolderFileManager.remove_file"><code class="docutils literal notranslate"><span class="pre">FolderFileManager.remove_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FolderFilerManager.FolderFileManager.retrieve_file"><code class="docutils literal notranslate"><span class="pre">FolderFileManager.retrieve_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FolderFilerManager.FolderFileManager.save_file"><code class="docutils literal notranslate"><span class="pre">FolderFileManager.save_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FolderFilerManager.FolderFileManager.setup"><code class="docutils literal notranslate"><span class="pre">FolderFileManager.setup()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="src.storage.implementations.html#module-src.storage.implementations.FtpFileManager">src.storage.implementations.FtpFileManager module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FtpFileManager.FtpFileManager"><code class="docutils literal notranslate"><span class="pre">FtpFileManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FtpFileManager.FtpFileManager.close"><code class="docutils literal notranslate"><span class="pre">FtpFileManager.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FtpFileManager.FtpFileManager.create_dir"><code class="docutils literal notranslate"><span class="pre">FtpFileManager.create_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FtpFileManager.FtpFileManager.get_dirs"><code class="docutils literal notranslate"><span class="pre">FtpFileManager.get_dirs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FtpFileManager.FtpFileManager.get_files_metadata"><code class="docutils literal notranslate"><span class="pre">FtpFileManager.get_files_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FtpFileManager.FtpFileManager.get_modif_date"><code class="docutils literal notranslate"><span class="pre">FtpFileManager.get_modif_date()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FtpFileManager.FtpFileManager.mkdirs"><code class="docutils literal notranslate"><span class="pre">FtpFileManager.mkdirs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FtpFileManager.FtpFileManager.open"><code class="docutils literal notranslate"><span class="pre">FtpFileManager.open()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FtpFileManager.FtpFileManager.process_spaced_metadata"><code class="docutils literal notranslate"><span class="pre">FtpFileManager.process_spaced_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FtpFileManager.FtpFileManager.refresh"><code class="docutils literal notranslate"><span class="pre">FtpFileManager.refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FtpFileManager.FtpFileManager.remove_dir"><code class="docutils literal notranslate"><span class="pre">FtpFileManager.remove_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FtpFileManager.FtpFileManager.remove_file"><code class="docutils literal notranslate"><span class="pre">FtpFileManager.remove_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FtpFileManager.FtpFileManager.retrieve_file"><code class="docutils literal notranslate"><span class="pre">FtpFileManager.retrieve_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FtpFileManager.FtpFileManager.save_file"><code class="docutils literal notranslate"><span class="pre">FtpFileManager.save_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.FtpFileManager.FtpFileManager.setup"><code class="docutils literal notranslate"><span class="pre">FtpFileManager.setup()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="src.storage.implementations.html#module-src.storage.implementations.ZipFileManager">src.storage.implementations.ZipFileManager module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.ZipFileManager.ZipFileManager"><code class="docutils literal notranslate"><span class="pre">ZipFileManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.ZipFileManager.ZipFileManager.close"><code class="docutils literal notranslate"><span class="pre">ZipFileManager.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.ZipFileManager.ZipFileManager.create_dir"><code class="docutils literal notranslate"><span class="pre">ZipFileManager.create_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.ZipFileManager.ZipFileManager.get_files_metadata"><code class="docutils literal notranslate"><span class="pre">ZipFileManager.get_files_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.ZipFileManager.ZipFileManager.get_path_data"><code class="docutils literal notranslate"><span class="pre">ZipFileManager.get_path_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.ZipFileManager.ZipFileManager.mkdirs"><code class="docutils literal notranslate"><span class="pre">ZipFileManager.mkdirs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.ZipFileManager.ZipFileManager.open"><code class="docutils literal notranslate"><span class="pre">ZipFileManager.open()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.ZipFileManager.ZipFileManager.refresh"><code class="docutils literal notranslate"><span class="pre">ZipFileManager.refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.ZipFileManager.ZipFileManager.remove_dir"><code class="docutils literal notranslate"><span class="pre">ZipFileManager.remove_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.ZipFileManager.ZipFileManager.remove_file"><code class="docutils literal notranslate"><span class="pre">ZipFileManager.remove_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.ZipFileManager.ZipFileManager.retrieve_file"><code class="docutils literal notranslate"><span class="pre">ZipFileManager.retrieve_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.ZipFileManager.ZipFileManager.save_file"><code class="docutils literal notranslate"><span class="pre">ZipFileManager.save_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.ZipFileManager.ZipFileManager.setup"><code class="docutils literal notranslate"><span class="pre">ZipFileManager.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.implementations.html#src.storage.implementations.ZipFileManager.ZipFileManager.to_millis_from_epoch"><code class="docutils literal notranslate"><span class="pre">ZipFileManager.to_millis_from_epoch()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="src.storage.implementations.html#module-src.storage.implementations">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.storage.interfaces.html">src.storage.interfaces package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.storage.interfaces.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.storage.interfaces.html#module-src.storage.interfaces.FileManager">src.storage.interfaces.FileManager module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager"><code class="docutils literal notranslate"><span class="pre">FileManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.close"><code class="docutils literal notranslate"><span class="pre">FileManager.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.create_dir"><code class="docutils literal notranslate"><span class="pre">FileManager.create_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.get_files_metadata"><code class="docutils literal notranslate"><span class="pre">FileManager.get_files_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.mkdirs"><code class="docutils literal notranslate"><span class="pre">FileManager.mkdirs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.open"><code class="docutils literal notranslate"><span class="pre">FileManager.open()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.refresh"><code class="docutils literal notranslate"><span class="pre">FileManager.refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.remove_dir"><code class="docutils literal notranslate"><span class="pre">FileManager.remove_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.remove_file"><code class="docutils literal notranslate"><span class="pre">FileManager.remove_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.retrieve_file"><code class="docutils literal notranslate"><span class="pre">FileManager.retrieve_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.save_file"><code class="docutils literal notranslate"><span class="pre">FileManager.save_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.storage.interfaces.html#src.storage.interfaces.FileManager.FileManager.setup"><code class="docutils literal notranslate"><span class="pre">FileManager.setup()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="src.storage.interfaces.html#module-src.storage.interfaces">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.storage.model.html">src.storage.model package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.storage.model.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.storage.model.html#module-src.storage.model.PathData">src.storage.model.PathData module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src.storage.model.html#src.storage.model.PathData.PathData"><code class="docutils literal notranslate"><span class="pre">PathData</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="src.storage.model.html#module-src.storage.model">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="module-src.storage">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src.storage" title="Permalink to this heading">¶</a></h2>
+<p>This package provides the contract a class should respect
+to be used by Algorithm class for syncing two locations.
+Implementations for the contract and factory for implementations
+are also provided. Sub-packages for the aforementioned functionalities are
+config, implementations and interfaces.</p>
+</section>
+</section>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="src.storage.config.html" class="btn btn-neutral float-right" title="src.storage.config package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="src.algorithm.html" class="btn btn-neutral float-left" title="src.algorithm package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2023, George Smoc.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
