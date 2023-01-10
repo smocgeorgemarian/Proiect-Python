@@ -12,7 +12,6 @@ from src.storage.implementations.ZipFileManager import ZipFileManager
 from src.storage.interfaces.FileManager import FileManager
 from src.storage.model.PathData import PathData
 
-
 MAN_SIZE = 1
 
 

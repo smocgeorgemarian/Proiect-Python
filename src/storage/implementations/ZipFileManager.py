@@ -106,6 +106,8 @@ class ZipFileManager(FileManager):
             return
         logging.info(f"Current blacklist {self.black_list}")
         tmp_file_path = self.path + TMP_SUFFIX
+        if os.path.exists(tmp_file_path):
+            os.remove(tmp_file_path)
         with zipfile.ZipFile(self.path, mode='r') as zip_fd:
             brute_infolist = zip_fd.infolist()
             brute_infolist.sort(key=lambda x: x.is_dir())

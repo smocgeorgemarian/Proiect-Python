@@ -13,7 +13,7 @@ from src.storage.model.PathData import PathData
 
 DEFAULT_PORT = 21
 
-DEFAULT_TIMEOUT = 30
+DEFAULT_TIMEOUT = 300
 
 SEPARATOR = "/"
 
@@ -93,6 +93,7 @@ class FtpFileManager(FileManager):
     def get_files_metadata(self, index=0):
         if index == 0:
             self.meta = dict()
+            self.curr_dirs = []
 
         content = []
         curr_dir = ''
